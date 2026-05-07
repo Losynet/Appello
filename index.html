@@ -388,13 +388,24 @@ window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))w
 window.savePhone=async function(){
   if(!modalCF)return;
   const raw=document.getElementById('modalInput').value.trim();
-  phones[modalCF]=raw; refreshCard(modalCF); window.closeModal();
-  try{await setDoc(phoneRef,{[modalCF]:raw},{merge:true});}catch(e){console.error(e);}
+  phones[modalCF]=raw;
+  refreshCard(modalCF);
+  window.closeModal();
+  try{
+    // Use setDoc with merge:true — works whether doc exists or not
+    await setDoc(phoneRef,{[modalCF]:raw},{merge:true});
+  }catch(e){
+    console.error('Errore salvataggio telefono:',e);
+    // Retry once without merge in case of permission issue
+    try{await setDoc(phoneRef,{[modalCF]:raw});}catch(e2){console.error(e2);}
+  }
 };
 window.deletePhone=async function(){
   if(!modalCF)return;
-  phones[modalCF]=''; refreshCard(modalCF); window.closeModal();
-  try{await setDoc(phoneRef,{[modalCF]:''},{merge:true});}catch(e){}
+  phones[modalCF]='';
+  refreshCard(modalCF);
+  window.closeModal();
+  try{await setDoc(phoneRef,{[modalCF]:''},{merge:true});}catch(e){console.error(e);}
 };
 document.getElementById('modalInput').addEventListener('keydown',e=>{
   if(e.key==='Enter')window.savePhone();
@@ -432,12 +443,10 @@ onSnapshot(phoneRef, snap=>{
     STUDENTS.forEach(s=>{ phones[s.cf]=d[s.cf]||''; });
   }
   phoneLoaded=true;
-  if(stateLoaded){
-    // Both ready — update only phone display on subsequent changes
-    STUDENTS.forEach(s=>refreshCard(s.cf));
-  } else {
-    tryRender();
-  }
+  // Always refresh all cards when phone data arrives or changes
+  // This ensures numbers appear even if this listener fires after renderAll()
+  STUDENTS.forEach(s=>refreshCard(s.cf));
+  updateStats(); applyFilters();
 }, ()=>{ phoneLoaded=true; tryRender(); });
 
 renderAll();
