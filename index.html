@@ -135,7 +135,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v15</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v16</div>
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
@@ -235,6 +235,7 @@ const STUDENTS=[
   {cognome:"TOLVE",nome:"DESIRE'E",cf:"TLVDSR09T57E977G",classe:"3B"},
   {cognome:"VINCI",nome:"MARILISA PIA",cf:"VNCMLS09P62G942S",classe:"3B"},
 ];
+STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
 STUDENTS.forEach((s,i)=>s.n=i+1);
 
 const state={};
