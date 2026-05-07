@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appello — Copenaghen 2026</title>
+<title>Appello — Copenaghen 2026 v8</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -131,6 +131,7 @@
     <div>
       <div class="school-tag">ITT Agraria — Classi 3^</div>
       <h1>APPELLO<br><span>COPENAGHEN</span></h1>
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.4);margin-top:4px;">v8</div>
     </div>
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
   </div>
@@ -386,22 +387,23 @@ window._om=function(cf){
 window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');window.modalCF=null;};
 window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))window.closeModal();};
 window.savePhone=async function(){
-  if(!window.modalCF)return;
+  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
+  if(!cf)return;
   const raw=document.getElementById('modalInput').value.trim();
   window.closeModal();
   try{
-    await setDoc(phoneRef,{[window.modalCF]:raw},{merge:true});
-    // phones{} and cards will update automatically via the onSnapshot listener
+    await setDoc(phoneRef,{[cf]:raw},{merge:true});
   }catch(e){
     console.error('Errore salvataggio telefono:',e);
     alert('Errore salvataggio: '+e.message);
   }
 };
 window.deletePhone=async function(){
-  if(!window.modalCF)return;
+  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
+  if(!cf)return;
   window.closeModal();
   try{
-    await setDoc(phoneRef,{[window.modalCF]:''},{merge:true});
+    await setDoc(phoneRef,{[cf]:''},{merge:true});
   }catch(e){console.error(e);}
 };
 document.getElementById('modalInput').addEventListener('keydown',e=>{
