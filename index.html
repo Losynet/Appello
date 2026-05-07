@@ -112,17 +112,7 @@
   .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
   .btn-cancel:hover{color:var(--text);}
 
-  /* Student management modal */
-  .modal-add-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--present);letter-spacing:1px;margin-bottom:14px;}
-  .modal input[type=text]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:11px 14px;border-radius:10px;outline:none;transition:border-color .2s;margin-bottom:10px;}
-  .modal input[type=text]:focus{border-color:var(--present);}
-  .modal input[type=text]::placeholder{color:var(--muted);}
-  .modal select{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.85rem;padding:11px 14px;border-radius:10px;outline:none;margin-bottom:16px;cursor:pointer;}
-  .btn-add-student{background:var(--present);color:#000;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%;transition:opacity .2s;}
-  .btn-add-student:hover{opacity:.85;}
-  .btn-del-student{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.1);color:var(--absent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;transition:all .18s;}
-  .btn-del-student:hover{background:rgba(255,77,109,.3);}
-  .tab-count{font-size:.65rem;opacity:.7;margin-left:3px;}
+  @media print{
     .toolbar,.stats,.progress-wrap,.class-tabs,.btn-edit,.btn-call,.modal-overlay{display:none!important;}
     body{background:#fff;color:#000;}
     .hero{background:#0057b7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -145,7 +135,8 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v19</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v16</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v17</div>
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
@@ -168,9 +159,7 @@
   <input type="search" id="searchBox" placeholder="🔍  Cerca cognome o nome…" oninput="applyFilters()">
   <button class="btn-sm btn-all-pres" onclick="setAll('present')">✓ Tutti presenti</button>
   <button class="btn-sm btn-reset" onclick="setAll('pending')">↺ Reset</button>
-  <button class="btn-sm" style="background:rgba(0,214,143,.12);color:var(--present);border-color:rgba(0,214,143,.25);" onclick="openAddModal()">＋ Studente</button>
-  <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button>
-</div>
+  <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button></div>
 
 <div class="class-tabs">
   <button class="class-tab active" onclick="filterClass('all',this)">Tutti (25)</button>
@@ -203,26 +192,7 @@
   </div>
 </div>
 
-<!-- MODAL AGGIUNGI STUDENTE -->
-<div class="modal-overlay" id="addModal" onclick="bgCloseAdd(event)">
-  <div class="modal">
-    <div class="modal-drag"></div>
-    <div class="modal-add-title">➕ Aggiungi Studente</div>
-    <label>Cognome</label>
-    <input type="text" id="addCognome" placeholder="es. ROSSI" style="text-transform:uppercase;">
-    <label>Nome</label>
-    <input type="text" id="addNome" placeholder="es. MARIO">
-    <label>Codice Fiscale</label>
-    <input type="text" id="addCF" placeholder="es. RSSMRA00A01G942X" style="text-transform:uppercase;">
-    <label>Classe</label>
-    <select id="addClasse">
-      <option value="3A">3A</option>
-      <option value="3B">3B</option>
-    </select>
-    <button class="btn-add-student" onclick="addStudent()">✓ Aggiungi</button>
-    <button class="btn-cancel" style="width:100%;margin-top:8px;" onclick="closeAddModal()">Annulla</button>
-  </div>
-</div>
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -238,7 +208,6 @@ const fbApp=initializeApp(firebaseConfig);
 const db=getFirestore(fbApp);
 const stateRef=doc(db,'appello','stati');
 const phoneRef=doc(db,'appello','telefoni');
-const studentsRef=doc(db,'appello','studenti_extra'); // stores added/removed students
 
 const STUDENTS=[
   {cognome:"AVINO",nome:"PASQUALE",cf:"VNAPQL09T29E977W",classe:"3A"},
@@ -247,6 +216,7 @@ const STUDENTS=[
   {cognome:"CARPENTIERI",nome:"MAURO",cf:"CRPMRA09H22E977Y",classe:"3A"},
   {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3A"},
   {cognome:"COLLAZZO",nome:"MICHELE",cf:"CLLMHL09T16E977T",classe:"3A"},
+  {cognome:"FRUCI",nome:"GERVASIA",cf:"FRCGVS10B44E977B",classe:"3A"},
   {cognome:"IACOVINO",nome:"ALESSANDRO",cf:"CVNLSN09S06E977M",classe:"3A"},
   {cognome:"MICHIELLI",nome:"MARIO",cf:"MCHMRA09S28E977T",classe:"3A"},
   {cognome:"MILANO",nome:"VINCENZO JUNIOR",cf:"MLNVCN10A04E977R",classe:"3A"},
@@ -317,7 +287,6 @@ function cardHTML(s){
     </div>
     ${callBtn}
     <button class="btn-edit" onclick="_om(\'${s.cf}\')" title="Telefono">✏️</button>
-    ${s.extra?`<button class="btn-del-student" onclick="removeStudent(\'${s.cf}\')" title="Rimuovi">✕</button>`:''}
     ${statusHTML(st)}
   `;
 }
@@ -355,7 +324,7 @@ function renderAll(){
     }
     list.appendChild(buildCard(s));
   });
-  applyFilters(); updateStats(); updateTabCount();
+  applyFilters(); updateStats();
 }
 
 async function toggle(cf){
@@ -445,70 +414,10 @@ document.getElementById('modalInput').addEventListener('keydown',e=>{
   if(e.key==='Escape')window.closeModal();
 });
 
-// ── STUDENT MANAGEMENT ───────────────────────────────────────────
-window.openAddModal=function(){
-  document.getElementById('addCognome').value='';
-  document.getElementById('addNome').value='';
-  document.getElementById('addCF').value='';
-  document.getElementById('addClasse').value='3A';
-  document.getElementById('addModal').classList.add('open');
-  setTimeout(()=>document.getElementById('addCognome').focus(),250);
-};
-window.closeAddModal=function(){document.getElementById('addModal').classList.remove('open');};
-window.bgCloseAdd=function(e){if(e.target===document.getElementById('addModal'))window.closeAddModal();};
-
-window.addStudent=async function(){
-  const cognome=document.getElementById('addCognome').value.trim().toUpperCase();
-  const nome=document.getElementById('addNome').value.trim().toUpperCase();
-  const cf=document.getElementById('addCF').value.trim().toUpperCase();
-  const classe=document.getElementById('addClasse').value;
-  if(!cognome||!nome||!cf){alert('Compila tutti i campi.');return;}
-  if(STUDENTS.find(s=>s.cf===cf)){alert('Studente già presente.');return;}
-  window.closeAddModal();
-  try{
-    await setDoc(studentsRef,{[cf]:{cognome,nome,cf,classe,extra:true}},{merge:true});
-  }catch(e){alert('Errore: '+e.message);}
-};
-
-window.removeStudent=async function(cf){
-  if(!confirm('Rimuovere questo studente dalla lista?'))return;
-  try{
-    // Mark as removed in Firestore
-    await setDoc(studentsRef,{[cf]:{removed:true}},{merge:true});
-  }catch(e){alert('Errore: '+e.message);}
-};
-
-function updateTabCount(){
-  const total=STUDENTS.length;
-  document.querySelectorAll('.class-tab')[0].innerHTML=`Tutti <span class="tab-count">(${total})</span>`;
-}
-
-// ── LISTENERS ─────────────────────────────────────────────────────
+// ── LISTENERS ────────────────────────────────────────────────────
 // Strategy: each listener independently updates its data then calls renderAll.
 // renderAll always reads from the current state{} and phones{} objects.
 // No race condition possible because JS is single-threaded.
-
-// Students listener — syncs added/removed students across devices
-onSnapshot(studentsRef, snap=>{
-  if(snap.exists()){
-    const d=snap.data();
-    Object.values(d).forEach(s=>{
-      if(s.removed){
-        // Remove from STUDENTS array
-        const idx=STUDENTS.findIndex(x=>x.cf===s.cf);
-        if(idx>=0) STUDENTS.splice(idx,1);
-      } else if(s.extra && !STUDENTS.find(x=>x.cf===s.cf)){
-        // Add extra student
-        STUDENTS.push({cognome:s.cognome,nome:s.nome,cf:s.cf,classe:s.classe,extra:true});
-        state[s.cf]=state[s.cf]||'pending';
-        phones[s.cf]=phones[s.cf]||'';
-      }
-    });
-    STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
-    STUDENTS.forEach((s,i)=>s.n=i+1);
-  }
-  renderAll();
-},()=>{});
 
 onSnapshot(stateRef, snap=>{
   if(snap.exists()){
