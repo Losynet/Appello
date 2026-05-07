@@ -388,66 +388,49 @@ window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))w
 window.savePhone=async function(){
   if(!modalCF)return;
   const raw=document.getElementById('modalInput').value.trim();
-  phones[modalCF]=raw;
-  refreshCard(modalCF);
   window.closeModal();
   try{
-    // Use setDoc with merge:true — works whether doc exists or not
     await setDoc(phoneRef,{[modalCF]:raw},{merge:true});
+    // phones{} and cards will update automatically via the onSnapshot listener
   }catch(e){
     console.error('Errore salvataggio telefono:',e);
-    // Retry once without merge in case of permission issue
-    try{await setDoc(phoneRef,{[modalCF]:raw});}catch(e2){console.error(e2);}
+    alert('Errore salvataggio: '+e.message);
   }
 };
 window.deletePhone=async function(){
   if(!modalCF)return;
-  phones[modalCF]='';
-  refreshCard(modalCF);
   window.closeModal();
-  try{await setDoc(phoneRef,{[modalCF]:''},{merge:true});}catch(e){console.error(e);}
+  try{
+    await setDoc(phoneRef,{[modalCF]:''},{merge:true});
+  }catch(e){console.error(e);}
 };
 document.getElementById('modalInput').addEventListener('keydown',e=>{
   if(e.key==='Enter')window.savePhone();
   if(e.key==='Escape')window.closeModal();
 });
 
-// Real-time listeners — use flags to avoid race condition
-let stateLoaded = false;
-let phoneLoaded = false;
-
-function tryRender(){
-  // Only do a full renderAll once BOTH snapshots have arrived
-  if(stateLoaded && phoneLoaded) renderAll();
-}
+// ── LISTENERS ────────────────────────────────────────────────────
+// Strategy: each listener independently updates its data then calls renderAll.
+// renderAll always reads from the current state{} and phones{} objects.
+// No race condition possible because JS is single-threaded.
 
 onSnapshot(stateRef, snap=>{
   if(snap.exists()){
     const d=snap.data();
     STUDENTS.forEach(s=>{ if(d[s.cf]!==undefined) state[s.cf]=d[s.cf]; });
   }
-  stateLoaded=true;
   setSyncStatus(true);
-  if(phoneLoaded){
-    // Both ready — update only state on subsequent changes
-    STUDENTS.forEach(s=>refreshCard(s.cf));
-    updateStats(); applyFilters();
-  } else {
-    tryRender();
-  }
-}, ()=>setSyncStatus(false));
+  renderAll();
+}, err=>{ console.error('stateRef error:',err); setSyncStatus(false); });
 
 onSnapshot(phoneRef, snap=>{
-  if(snap.exists()){
-    const d=snap.data();
-    STUDENTS.forEach(s=>{ phones[s.cf]=d[s.cf]||''; });
-  }
-  phoneLoaded=true;
-  // Always refresh all cards when phone data arrives or changes
-  // This ensures numbers appear even if this listener fires after renderAll()
-  STUDENTS.forEach(s=>refreshCard(s.cf));
-  updateStats(); applyFilters();
-}, ()=>{ phoneLoaded=true; tryRender(); });
+  // IMPORTANT: handle both exists and not-exists cases
+  // On first load the doc may not exist yet — that is fine, phones stay empty
+  // When doc is created (first savePhone), this fires again with the data
+  const d = snap.exists() ? snap.data() : {};
+  STUDENTS.forEach(s=>{ phones[s.cf] = d[s.cf] || ''; });
+  renderAll();
+}, err=>{ console.error('phoneRef error:',err); });
 
 renderAll();
 </script>
