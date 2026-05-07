@@ -401,27 +401,44 @@ document.getElementById('modalInput').addEventListener('keydown',e=>{
   if(e.key==='Escape')window.closeModal();
 });
 
-// Real-time listeners
-onSnapshot(stateRef,snap=>{
+// Real-time listeners — use flags to avoid race condition
+let stateLoaded = false;
+let phoneLoaded = false;
+
+function tryRender(){
+  // Only do a full renderAll once BOTH snapshots have arrived
+  if(stateLoaded && phoneLoaded) renderAll();
+}
+
+onSnapshot(stateRef, snap=>{
   if(snap.exists()){
     const d=snap.data();
-    // Only update keys that exist in Firestore; leave others as 'pending'
-    STUDENTS.forEach(s=>{
-      if(d[s.cf] !== undefined) state[s.cf]=d[s.cf];
-    });
+    STUDENTS.forEach(s=>{ if(d[s.cf]!==undefined) state[s.cf]=d[s.cf]; });
   }
-  renderAll();
+  stateLoaded=true;
   setSyncStatus(true);
-},()=>setSyncStatus(false));
+  if(phoneLoaded){
+    // Both ready — update only state on subsequent changes
+    STUDENTS.forEach(s=>refreshCard(s.cf));
+    updateStats(); applyFilters();
+  } else {
+    tryRender();
+  }
+}, ()=>setSyncStatus(false));
 
-onSnapshot(phoneRef,snap=>{
+onSnapshot(phoneRef, snap=>{
   if(snap.exists()){
     const d=snap.data();
     STUDENTS.forEach(s=>{ phones[s.cf]=d[s.cf]||''; });
   }
-  // Always re-render after phone data arrives so numbers appear on all devices
-  renderAll();
-},()=>{});
+  phoneLoaded=true;
+  if(stateLoaded){
+    // Both ready — update only phone display on subsequent changes
+    STUDENTS.forEach(s=>refreshCard(s.cf));
+  } else {
+    tryRender();
+  }
+}, ()=>{ phoneLoaded=true; tryRender(); });
 
 renderAll();
 </script>
