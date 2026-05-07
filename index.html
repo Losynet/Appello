@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appello — Copenaghen 2026</title>
+<title>Appello — Copenaghen 2026 v13</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -17,7 +17,6 @@
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
 
   .hero{background:linear-gradient(135deg,#0057b7 0%,#003d82 50%,#0a0f1e 100%);padding:28px 24px 22px;position:relative;overflow:hidden;}
-  .hero::before{content:'🇩🇰';position:absolute;right:-10px;top:-10px;font-size:120px;opacity:.08;pointer-events:none;}
   .school-tag{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--flag-y);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
   h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:1px;color:#fff;}
   h1 span{color:var(--flag-y);}
@@ -53,8 +52,7 @@
   .class-tab:hover:not(.active){color:var(--text);background:var(--card);}
 
   .class-hdr{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--accent);padding:14px 4px 6px;border-bottom:1px solid rgba(245,158,11,.2);margin-bottom:2px;}
-  .class-hdr.hidden{display:none;}
-
+  
   .list-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
 
   .student-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);position:relative;overflow:hidden;transition:all .18s;}
@@ -64,6 +62,7 @@
   .student-card.absent{border-color:rgba(255,77,109,.3);background:rgba(255,77,109,.05);}
   .student-card.absent::before{background:var(--absent);}
   .student-card.hidden{display:none;}
+  .class-hdr.hidden{display:none;}
 
   .stu-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);width:20px;flex-shrink:0;text-align:right;}
 
@@ -78,12 +77,9 @@
   .stu-cf{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);letter-spacing:.5px;}
   .stu-phone-disp{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--phone);letter-spacing:.3px;}
 
-  /* Call button — shown only when phone exists AND isMobile */
   .btn-call{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:rgba(167,139,250,.18);color:var(--phone);cursor:pointer;transition:all .2s;flex-shrink:0;font-size:.95rem;text-decoration:none;-webkit-tap-highlight-color:transparent;}
   .btn-call:hover{background:rgba(167,139,250,.35);transform:scale(1.1);}
-  .btn-call.hidden-call{display:none;}
 
-  /* Edit phone pencil button */
   .btn-edit{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;transition:all .18s;}
   .btn-edit:hover{border-color:var(--phone);color:var(--phone);}
 
@@ -92,7 +88,6 @@
   .status-pres{background:rgba(0,214,143,.15);color:var(--present);}
   .status-abs{background:rgba(255,77,109,.15);color:var(--absent);}
 
-  /* MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:999;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;}
   .modal-overlay.open{opacity:1;pointer-events:all;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 22px 32px;width:100%;max-width:480px;transform:translateY(30px);transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
@@ -103,24 +98,24 @@
   .modal label{display:block;font-family:'DM Mono',monospace;font-size:.63rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
   .modal input[type=tel]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:1.05rem;padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;letter-spacing:.5px;}
   .modal input[type=tel]:focus{border-color:var(--phone);}
-  .modal input[type=tel]::placeholder{color:var(--muted);font-size:.8rem;letter-spacing:0;}
   .modal-hint{font-size:.62rem;color:var(--muted);margin-top:7px;margin-bottom:20px;line-height:1.5;}
   .modal-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
-  .btn-save{background:var(--phone);color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:opacity .2s;}
-  .btn-save:hover{opacity:.85;}
-  .btn-del{background:rgba(255,77,109,.15);color:var(--absent);border:1px solid rgba(255,77,109,.3);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-  .btn-del:hover{background:rgba(255,77,109,.28);}
-  .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-  .btn-cancel:hover{color:var(--text);}
+  .btn-save{background:var(--phone);color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;}
+  .btn-del{background:rgba(255,77,109,.15);color:var(--absent);border:1px solid rgba(255,77,109,.3);padding:11px;border-radius:10px;cursor:pointer;}
+  .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;cursor:pointer;}
 
-  @media print{
+  .modal-add-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--present);letter-spacing:1px;margin-bottom:14px;}
+  .modal input[type=text]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:11px 14px;border-radius:10px;outline:none;margin-bottom:10px;}
+  .modal select{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.85rem;padding:11px 14px;border-radius:10px;outline:none;margin-bottom:16px;cursor:pointer;}
+  .btn-add-student{background:var(--present);color:#000;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%;}
+  .btn-del-student{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.1);color:var(--absent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;}
+  .tab-count{font-size:.65rem;opacity:.7;margin-left:3px;}
+
+  @media print {
     .toolbar,.stats,.progress-wrap,.class-tabs,.btn-edit,.btn-call,.modal-overlay{display:none!important;}
     body{background:#fff;color:#000;}
-    .hero{background:#0057b7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .hero{background:#0057b7!important;-webkit-print-color-adjust:exact;}
     .student-card{border:1px solid #ddd!important;background:#fff!important;break-inside:avoid;}
-    .student-card.present{background:#e6fff6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .student-card.absent{background:#fff0f3!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .stu-phone-disp{color:#6d28d9!important;}
   }
 </style>
 </head>
@@ -129,21 +124,23 @@
 <div class="hero">
   <div class="hero-top">
     <div>
-      <div class="school-tag">ITT Agraria — Classi 3^</div>
-      <h1>APPELLO<br><span>COPENAGHEN</span></h1>
+      <div class="school-tag">ITT - Villa d'Agri — Classi 3^</div>
+      <h1>FSL / DANIMARCA<br><span>COPENAGHEN</span></h1>
     </div>
-    <div class="date-badge">8 — 14 MAGGIO 2026</div>
+    <div style="font-size:60px;opacity:0.15;pointer-events:none;line-height:1;">🇮🇹🇩🇰</div>
   </div>
-  <div style="margin-top:10px;">
+  <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+    <div class="date-badge">8 — 14 MAGGIO 2026</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v19</div>
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><span class="stat-num tot" id="sTot">25</span><span class="stat-label">Totale</span></div>
+  <div class="stat"><span class="stat-num tot" id="sTot">0</span><span class="stat-label">Totale</span></div>
   <div class="stat"><span class="stat-num pres" id="sPres">0</span><span class="stat-label">Presenti</span></div>
   <div class="stat"><span class="stat-num abs" id="sAbs">0</span><span class="stat-label">Assenti</span></div>
-  <div class="stat"><span class="stat-num pend" id="sPend">25</span><span class="stat-label">Da rilevare</span></div>
+  <div class="stat"><span class="stat-num pend" id="sPend">0</span><span class="stat-label">Da rilevare</span></div>
 </div>
 
 <div class="progress-wrap">
@@ -157,10 +154,12 @@
   <input type="search" id="searchBox" placeholder="🔍  Cerca cognome o nome…" oninput="applyFilters()">
   <button class="btn-sm btn-all-pres" onclick="setAll('present')">✓ Tutti presenti</button>
   <button class="btn-sm btn-reset" onclick="setAll('pending')">↺ Reset</button>
-  <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button></div>
+  <button class="btn-sm" style="background:rgba(0,214,143,.12);color:var(--present);border-color:rgba(0,214,143,.25);" onclick="openAddModal()">＋ Studente</button>
+  <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button>
+</div>
 
 <div class="class-tabs">
-  <button class="class-tab active" onclick="filterClass('all',this)">Tutti (25)</button>
+  <button class="class-tab active" onclick="filterClass('all',this)">Tutti</button>
   <button class="class-tab" onclick="filterClass('presenti',this)">Presenti</button>
   <button class="class-tab" onclick="filterClass('assenti',this)">Assenti</button>
   <button class="class-tab" onclick="filterClass('pending',this)">Da rilevare</button>
@@ -168,25 +167,32 @@
 
 <div class="list-wrap" id="studentList"></div>
 
-<!-- MODAL TELEFONO -->
 <div class="modal-overlay" id="phoneModal" onclick="bgClose(event)">
   <div class="modal">
     <div class="modal-drag"></div>
     <div class="modal-title">📱 Numero di Telefono</div>
     <div class="modal-sname" id="modalName"></div>
-    <label>Numero (genitore / studente)</label>
-    <input type="tel" id="modalInput" placeholder="es. +39 333 123 4567" inputmode="tel" autocomplete="tel">
-    <div class="modal-hint">
-      <strong style="color:var(--phone)">📡 Chiamata dalla Danimarca:</strong><br>
-      Inserisci il numero <strong>senza prefisso</strong> (es. <code>333 123 4567</code>) oppure già con <code>+39</code>.<br>
-      L'app aggiunge automaticamente <strong>+39</strong> per chiamare l'Italia dall'estero.<br>
-      <span style="opacity:.7">Non inserire lo 0 iniziale dei cellulari — i numeri italiani iniziano già con 3xx.</span>
-    </div>
+    <label>Numero</label>
+    <input type="tel" id="modalInput" placeholder="es. 333 123 4567" inputmode="tel">
+    <div class="modal-hint">Aggiunge automaticamente +39 per chiamate dall'estero.</div>
     <div class="modal-actions">
       <button class="btn-save" onclick="savePhone()">💾 Salva</button>
       <button class="btn-del" onclick="deletePhone()">🗑 Elimina</button>
       <button class="btn-cancel" onclick="closeModal()">Annulla</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addModal" onclick="bgCloseAdd(event)">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-add-title">➕ Aggiungi Studente</div>
+    <input type="text" id="addCognome" placeholder="COGNOME" style="text-transform:uppercase;">
+    <input type="text" id="addNome" placeholder="NOME" style="text-transform:uppercase;">
+    <input type="text" id="addCF" placeholder="CODICE FISCALE" style="text-transform:uppercase;">
+    <select id="addClasse"><option value="3A">3A</option><option value="3B">3B</option></select>
+    <button class="btn-add-student" onclick="addStudent()">✓ Aggiungi</button>
+    <button class="btn-cancel" style="width:100%;margin-top:8px;" onclick="closeAddModal()">Annulla</button>
   </div>
 </div>
 
@@ -206,12 +212,15 @@ const fbApp=initializeApp(firebaseConfig);
 const db=getFirestore(fbApp);
 const stateRef=doc(db,'appello','stati');
 const phoneRef=doc(db,'appello','telefoni');
+const studentsRef=doc(db,'appello','studenti_extra');
 
 const STUDENTS=[
   {cognome:"AVINO",nome:"PASQUALE",cf:"VNAPQL09T29E977W",classe:"3A"},
+  {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3A"},
+  {cognome:"BRUNO",nome:"ANGELO",cf:"BRNNGL09A01G942X",classe:"3A"},
   {cognome:"CARPENTIERI",nome:"MAURO",cf:"CRPMRA09H22E977Y",classe:"3A"},
+  {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3A"},
   {cognome:"COLLAZZO",nome:"MICHELE",cf:"CLLMHL09T16E977T",classe:"3A"},
-  {cognome:"FRUCI",nome:"GERVASIA",cf:"FRCGVS10B44E977B",classe:"3A"},
   {cognome:"IACOVINO",nome:"ALESSANDRO",cf:"CVNLSN09S06E977M",classe:"3A"},
   {cognome:"MICHIELLI",nome:"MARIO",cf:"MCHMRA09S28E977T",classe:"3A"},
   {cognome:"MILANO",nome:"VINCENZO JUNIOR",cf:"MLNVCN10A04E977R",classe:"3A"},
@@ -219,30 +228,24 @@ const STUDENTS=[
   {cognome:"RAUCCI",nome:"IRENE",cf:"RCCRNI10B59E977F",classe:"3A"},
   {cognome:"SASSANO",nome:"GINO",cf:"SSSGNI09L12G942C",classe:"3A"},
   {cognome:"BAFUNNO",nome:"GIORGIA",cf:"BFNGRG09L45E977V",classe:"3B"},
-  {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3B"},
   {cognome:"CAMPANA",nome:"SAMUELE",cf:"CMPSML09S25F138B",classe:"3B"},
   {cognome:"CASELLA",nome:"MARIA BENEDETTA",cf:"CSLMBN09T55G942A",classe:"3B"},
-  {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3B"},
   {cognome:"DAGROSA",nome:"ANGELO",cf:"DGRNGL09M14E977R",classe:"3B"},
   {cognome:"DI RAGO",nome:"GIOELE",cf:"DRGGLI10C17E977Z",classe:"3B"},
   {cognome:"FRUGUGIETTI REALE",nome:"MARIO",cf:"FRGMRA09M22E977T",classe:"3B"},
   {cognome:"GALGANO",nome:"DAVIDE",cf:"GLGDVD09T25G942C",classe:"3B"},
   {cognome:"NIGRO",nome:"MATTIA",cf:"NGRMTT09M03E977H",classe:"3B"},
   {cognome:"NIGRO",nome:"SIMONE",cf:"NGRSMN09L30G942H",classe:"3B"},
-  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3B"},
+  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3A"},
   {cognome:"PIZZUTO",nome:"FRANCESCO PIO",cf:"PZZFNC08T28E977P",classe:"3B"},
   {cognome:"TOLVE",nome:"DESIRE'E",cf:"TLVDSR09T57E977G",classe:"3B"},
   {cognome:"VINCI",nome:"MARILISA PIA",cf:"VNCMLS09P62G942S",classe:"3B"},
 ];
-STUDENTS.forEach((s,i)=>s.n=i+1);
 
 const state={};
 const phones={};
-STUDENTS.forEach(s=>{state[s.cf]='pending';phones[s.cf]='';});
-
-const canCall=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let classFilter='all';
-let modalCF=null;
+const canCall=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 function setSyncStatus(ok){
   const el=document.getElementById('syncDot');
@@ -252,26 +255,18 @@ function setSyncStatus(ok){
 function normalizePhone(raw){
   let n=(raw||'').trim().replace(/[\s\-\.]/g,'');
   if(!n)return'';
-  if(n.startsWith('00'))n='+'+n.slice(2);
-  else if(!n.startsWith('+'))n='+39'+n;
+  if(!n.startsWith('+') && !n.startsWith('00')) n='+39'+n;
   return n;
 }
 
-function ini(s){return(s.cognome[0]||'')+( s.nome[0]||'');}
+function ini(s){ return s.cognome[0] + s.nome[0]; }
 
-function statusHTML(st){
-  if(st==='present')return'<span class="stu-status status-pres">PRESENTE</span>';
-  if(st==='absent') return'<span class="stu-status status-abs">ASSENTE</span>';
-  return'<span class="stu-status status-pend">&#8212;</span>';
-}
-
-function cardHTML(s){
+window.cardHTML = function(s){
   const st=state[s.cf]||'pending';
   const norm=normalizePhone(phones[s.cf]||'');
-  const callBtn=norm&&canCall
-    ?`<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()" title="Chiama">📞</a>`
-    :'<span style="width:34px;flex-shrink:0"></span>';
-  return`
+  const callBtn=norm&&canCall ? `<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()">📞</a>` : '<span style="width:34px"></span>';
+  
+  return `
     <span class="stu-num">${s.n}</span>
     <div class="stu-avatar">${ini(s)}</div>
     <div class="stu-info">
@@ -282,87 +277,70 @@ function cardHTML(s){
       </div>
     </div>
     ${callBtn}
-    <button class="btn-edit" onclick="_om(\'${s.cf}\')" title="Telefono">✏️</button>
-    ${statusHTML(st)}
+    <button class="btn-edit" onclick="_om('${s.cf}')">✏️</button>
+    ${s.extra?`<button class="btn-del-student" onclick="removeStudent('${s.cf}')">✕</button>`:''}
+    <span class="stu-status status-${st.slice(0,4)}">${st==='pending'?'—':st.toUpperCase()}</span>
   `;
-}
-
-function buildCard(s){
-  const d=document.createElement('div');
-  d.id='sc-'+s.cf; d.className='student-card '+(state[s.cf]||'pending');
-  d.innerHTML=cardHTML(s); bind(d,s.cf); return d;
-}
-function bind(d,cf){
-  ['stu-avatar','stu-info','stu-status'].forEach(c=>{
-    const el=d.querySelector('.'+c);
-    if(el)el.onclick=e=>{e.stopPropagation();toggle(cf);};
-  });
-}
-function refreshCard(cf){
-  const s=STUDENTS.find(x=>x.cf===cf);
-  const old=document.getElementById('sc-'+cf);
-  if(!old||!s)return;
-  const h=old.classList.contains('hidden');
-  old.className='student-card '+(state[cf]||'pending')+(h?' hidden':'');
-  old.innerHTML=cardHTML(s); bind(old,cf);
 }
 
 function renderAll(){
   const list=document.getElementById('studentList');
   list.innerHTML='';
   let last='';
-  STUDENTS.forEach(s=>{
+  STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
+  STUDENTS.forEach((s,i)=>{
+    s.n=i+1;
     if(s.classe!==last){
       last=s.classe;
       const h=document.createElement('div');
-      h.className='class-hdr';h.dataset.classe=s.classe;
-      h.textContent='Classe '+s.classe;list.appendChild(h);
+      h.className='class-hdr'; h.dataset.classe=s.classe;
+      h.textContent='Classe '+s.classe; list.appendChild(h);
     }
-    list.appendChild(buildCard(s));
+    const d=document.createElement('div');
+    d.id='sc-'+s.cf; d.className='student-card '+(state[s.cf]||'pending');
+    d.innerHTML=window.cardHTML(s);
+    d.onclick=()=>window.toggle(s.cf);
+    list.appendChild(d);
   });
   applyFilters(); updateStats();
 }
 
-async function toggle(cf){
+window.toggle=async function(cf){
   const cur=state[cf]||'pending';
   state[cf]=cur==='pending'?'present':cur==='present'?'absent':'pending';
-  refreshCard(cf); updateStats(); applyFilters();
-  try{await setDoc(stateRef,{[cf]:state[cf]},{merge:true});}catch(e){console.error(e);}
-}
+  renderAll();
+  await setDoc(stateRef,{[cf]:state[cf]},{merge:true});
+};
 
 function updateStats(){
   const pr=STUDENTS.filter(s=>state[s.cf]==='present').length;
   const ab=STUDENTS.filter(s=>state[s.cf]==='absent').length;
-  const pe=STUDENTS.length-pr-ab;
   document.getElementById('sTot').textContent=STUDENTS.length;
   document.getElementById('sPres').textContent=pr;
   document.getElementById('sAbs').textContent=ab;
-  document.getElementById('sPend').textContent=pe;
+  document.getElementById('sPend').textContent=STUDENTS.length-pr-ab;
   document.getElementById('pbPres').style.width=(pr/STUDENTS.length*100)+'%';
   document.getElementById('pbAbs').style.width=(ab/STUDENTS.length*100)+'%';
 }
 
 window.setAll=async function(st){
-  // Reset ONLY attendance states — never touch phone numbers
   STUDENTS.forEach(s=>state[s.cf]=st);
-  const b={};
-  STUDENTS.forEach(s=>b[s.cf]=st);
+  const b={}; STUDENTS.forEach(s=>b[s.cf]=st);
   renderAll();
-  try{
-    // Write only state document, phone document untouched
-    await setDoc(stateRef,b);
-  }catch(e){console.error(e);}
+  await setDoc(stateRef,b);
 };
+
 window.filterClass=function(type,btn){
   classFilter=type;
   document.querySelectorAll('.class-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active'); applyFilters();
 };
-function applyFilters(){
+
+window.applyFilters=function(){
   const q=(document.getElementById('searchBox').value||'').toLowerCase();
   const vc=new Set();
   STUDENTS.forEach(s=>{
-    const card=document.getElementById('sc-'+s.cf);if(!card)return;
+    const card=document.getElementById('sc-'+s.cf); if(!card)return;
     const ms=!q||(s.cognome+' '+s.nome).toLowerCase().includes(q);
     let mc=true;
     if(classFilter==='presenti')mc=state[s.cf]==='present';
@@ -372,65 +350,78 @@ function applyFilters(){
     if(ms&&mc)vc.add(s.classe);
   });
   document.querySelectorAll('.class-hdr').forEach(h=>h.classList.toggle('hidden',!vc.has(h.dataset.classe)));
-}
-window.applyFilters=applyFilters;
+};
 
 window._om=function(cf){
-  modalCF=cf;
+  window.modalCF=cf;
   const s=STUDENTS.find(x=>x.cf===cf);
-  document.getElementById('modalName').textContent=s.cognome+' '+s.nome+' — '+s.classe;
+  document.getElementById('modalName').textContent=s.cognome+' '+s.nome;
   document.getElementById('modalInput').value=phones[cf]||'';
   document.getElementById('phoneModal').classList.add('open');
-  setTimeout(()=>document.getElementById('modalInput').focus(),250);
 };
-window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');modalCF=null;};
-window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))window.closeModal();};
-window.savePhone=async function(){
-  if(!modalCF)return;
-  const raw=document.getElementById('modalInput').value.trim();
-  window.closeModal();
-  try{
-    await setDoc(phoneRef,{[modalCF]:raw},{merge:true});
-    // phones{} and cards will update automatically via the onSnapshot listener
-  }catch(e){
-    console.error('Errore salvataggio telefono:',e);
-    alert('Errore salvataggio: '+e.message);
-  }
-};
-window.deletePhone=async function(){
-  if(!modalCF)return;
-  window.closeModal();
-  try{
-    await setDoc(phoneRef,{[modalCF]:''},{merge:true});
-  }catch(e){console.error(e);}
-};
-document.getElementById('modalInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter')window.savePhone();
-  if(e.key==='Escape')window.closeModal();
-});
 
-// ── LISTENERS ────────────────────────────────────────────────────
-// Strategy: each listener independently updates its data then calls renderAll.
-// renderAll always reads from the current state{} and phones{} objects.
-// No race condition possible because JS is single-threaded.
+window.closeModal=()=>document.getElementById('phoneModal').classList.remove('open');
+window.bgClose=(e)=>{if(e.target.id==='phoneModal')window.closeModal();};
+
+window.savePhone=async function(){
+  const cf=window.modalCF; if(!cf)return;
+  const raw=document.getElementById('modalInput').value.trim();
+  phones[cf]=raw; window.closeModal(); renderAll();
+  await setDoc(phoneRef,{[cf]:raw},{merge:true});
+};
+
+window.deletePhone=async function(){
+  const cf=window.modalCF; if(!cf)return;
+  phones[cf]=''; window.closeModal(); renderAll();
+  await setDoc(phoneRef,{[cf]:''},{merge:true});
+};
+
+window.openAddModal=()=>document.getElementById('addModal').classList.add('open');
+window.closeAddModal=()=>document.getElementById('addModal').classList.remove('open');
+window.bgCloseAdd=(e)=>{if(e.target.id==='addModal')window.closeAddModal();};
+
+window.addStudent=async function(){
+  const cognome=document.getElementById('addCognome').value.trim().toUpperCase();
+  const nome=document.getElementById('addNome').value.trim().toUpperCase();
+  const cf=document.getElementById('addCF').value.trim().toUpperCase();
+  const classe=document.getElementById('addClasse').value;
+  if(!cognome||!nome||!cf)return;
+  await setDoc(studentsRef,{[cf]:{cognome,nome,cf,classe,extra:true}},{merge:true});
+  window.closeAddModal();
+};
+
+window.removeStudent=async function(cf){
+  if(confirm('Rimuovere studente?')) await setDoc(studentsRef,{[cf]:{removed:true}},{merge:true});
+};
+
+// LISTENERS
+onSnapshot(studentsRef, snap=>{
+  if(snap.exists()){
+    const d=snap.data();
+    Object.values(d).forEach(s=>{
+      const idx=STUDENTS.findIndex(x=>x.cf===s.cf);
+      if(s.removed && idx>=0) STUDENTS.splice(idx,1);
+      else if(s.extra && idx<0) STUDENTS.push(s);
+    });
+    renderAll();
+  }
+});
 
 onSnapshot(stateRef, snap=>{
   if(snap.exists()){
     const d=snap.data();
-    STUDENTS.forEach(s=>{ if(d[s.cf]!==undefined) state[s.cf]=d[s.cf]; });
+    STUDENTS.forEach(s=>{ if(d[s.cf]) state[s.cf]=d[s.cf]; });
+    setSyncStatus(true); renderAll();
   }
-  setSyncStatus(true);
-  renderAll();
-}, err=>{ console.error('stateRef error:',err); setSyncStatus(false); });
+},()=>setSyncStatus(false));
 
 onSnapshot(phoneRef, snap=>{
-  // IMPORTANT: handle both exists and not-exists cases
-  // On first load the doc may not exist yet — that is fine, phones stay empty
-  // When doc is created (first savePhone), this fires again with the data
-  const d = snap.exists() ? snap.data() : {};
-  STUDENTS.forEach(s=>{ phones[s.cf] = d[s.cf] || ''; });
-  renderAll();
-}, err=>{ console.error('phoneRef error:',err); });
+  if(snap.exists()){
+    const d=snap.data();
+    STUDENTS.forEach(s=>{ phones[s.cf]=d[s.cf]||''; });
+    renderAll();
+  }
+});
 
 renderAll();
 </script>
