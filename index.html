@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appello — Copenaghen 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0f1e; --surface:#111827; --card:#1a2235;
+    --border:rgba(255,255,255,0.07);
+    --present:#00d68f; --absent:#ff4d6d; --pending:#3b82f6;
+    --text:#e2e8f0; --muted:#64748b; --accent:#f59e0b;
+    --flag-y:#ffd700; --phone:#a78bfa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+  .hero{background:linear-gradient(135deg,#0057b7 0%,#003d82 50%,#0a0f1e 100%);padding:28px 24px 22px;position:relative;overflow:hidden;}
+  .hero::before{content:'🇩🇰';position:absolute;right:-10px;top:-10px;font-size:120px;opacity:.08;pointer-events:none;}
+  .school-tag{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--flag-y);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:1px;color:#fff;}
+  h1 span{color:var(--flag-y);}
+  .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .date-badge{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--flag-y);font-family:'DM Mono',monospace;font-size:.65rem;padding:5px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
+
+  .stats{display:flex;gap:1px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .stat{flex:1;text-align:center;padding:8px 4px;border-radius:8px;}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;display:block;}
+  .stat-num.tot{color:var(--text);}.stat-num.pres{color:var(--present);}.stat-num.abs{color:var(--absent);}.stat-num.pend{color:var(--pending);}
+  .stat-label{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;display:block;}
+
+  .progress-wrap{background:var(--surface);padding:0 16px 14px;border-bottom:1px solid var(--border);}
+  .progress-bar{height:6px;border-radius:3px;background:var(--card);overflow:hidden;display:flex;}
+  .pb-present{background:var(--present);transition:width .4s ease;}
+  .pb-absent{background:var(--absent);transition:width .4s ease;}
+
+  .toolbar{display:flex;gap:8px;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap;}
+  .toolbar input{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 12px;border-radius:8px;outline:none;transition:border-color .2s;}
+  .toolbar input:focus{border-color:var(--accent);}
+  .toolbar input::placeholder{color:var(--muted);}
+  .btn-sm{font-family:'DM Mono',monospace;font-size:.68rem;padding:7px 11px;border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.5px;}
+  .btn-all-pres{background:rgba(0,214,143,.12);color:var(--present);border-color:rgba(0,214,143,.25);}
+  .btn-all-pres:hover{background:rgba(0,214,143,.22);}
+  .btn-reset{background:rgba(255,77,109,.1);color:var(--absent);border-color:rgba(255,77,109,.25);}
+  .btn-reset:hover{background:rgba(255,77,109,.2);}
+  .btn-print{background:rgba(245,158,11,.12);color:var(--accent);border-color:rgba(245,158,11,.25);}
+  .btn-print:hover{background:rgba(245,158,11,.22);}
+
+  .class-tabs{display:flex;gap:0;padding:12px 16px 0;background:var(--surface);border-bottom:1px solid var(--border);}
+  .class-tab{font-family:'DM Mono',monospace;font-size:.72rem;padding:8px 16px;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;position:relative;top:1px;}
+  .class-tab.active{color:var(--accent);background:var(--bg);border-color:var(--border);border-bottom-color:var(--bg);}
+  .class-tab:hover:not(.active){color:var(--text);background:var(--card);}
+
+  .class-hdr{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--accent);padding:14px 4px 6px;border-bottom:1px solid rgba(245,158,11,.2);margin-bottom:2px;}
+  .class-hdr.hidden{display:none;}
+
+  .list-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
+
+  .student-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);position:relative;overflow:hidden;transition:all .18s;}
+  .student-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:10px 0 0 10px;background:var(--muted);transition:background .18s;}
+  .student-card.present{border-color:rgba(0,214,143,.3);background:rgba(0,214,143,.05);}
+  .student-card.present::before{background:var(--present);}
+  .student-card.absent{border-color:rgba(255,77,109,.3);background:rgba(255,77,109,.05);}
+  .student-card.absent::before{background:var(--absent);}
+  .student-card.hidden{display:none;}
+
+  .stu-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);width:20px;flex-shrink:0;text-align:right;}
+
+  .stu-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;cursor:pointer;transition:all .18s;background:var(--surface);color:var(--muted);border:1.5px solid var(--border);}
+  .student-card.present .stu-avatar{background:rgba(0,214,143,.15);color:var(--present);border-color:rgba(0,214,143,.4);}
+  .student-card.absent .stu-avatar{background:rgba(255,77,109,.15);color:var(--absent);border-color:rgba(255,77,109,.4);}
+
+  .stu-info{flex:1;min-width:0;cursor:pointer;}
+  .stu-name{font-size:.86rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .18s;}
+  .student-card.present .stu-name{color:#fff;}
+  .stu-sub{display:flex;gap:8px;align-items:center;margin-top:2px;flex-wrap:wrap;}
+  .stu-cf{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);letter-spacing:.5px;}
+  .stu-phone-disp{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--phone);letter-spacing:.3px;}
+
+  /* Call button — shown only when phone exists AND isMobile */
+  .btn-call{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:rgba(167,139,250,.18);color:var(--phone);cursor:pointer;transition:all .2s;flex-shrink:0;font-size:.95rem;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+  .btn-call:hover{background:rgba(167,139,250,.35);transform:scale(1.1);}
+  .btn-call.hidden-call{display:none;}
+
+  /* Edit phone pencil button */
+  .btn-edit{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;transition:all .18s;}
+  .btn-edit:hover{border-color:var(--phone);color:var(--phone);}
+
+  .stu-status{font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.5px;flex-shrink:0;font-family:'DM Mono',monospace;cursor:pointer;transition:all .18s;}
+  .status-pend{background:rgba(59,130,246,.15);color:var(--pending);}
+  .status-pres{background:rgba(0,214,143,.15);color:var(--present);}
+  .status-abs{background:rgba(255,77,109,.15);color:var(--absent);}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:999;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 22px 32px;width:100%;max-width:480px;transform:translateY(30px);transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+  .modal-overlay.open .modal{transform:translateY(0);}
+  .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--phone);letter-spacing:1px;margin-bottom:2px;}
+  .modal-sname{font-size:.8rem;color:var(--muted);margin-bottom:18px;}
+  .modal label{display:block;font-family:'DM Mono',monospace;font-size:.63rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+  .modal input[type=tel]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:1.05rem;padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;letter-spacing:.5px;}
+  .modal input[type=tel]:focus{border-color:var(--phone);}
+  .modal input[type=tel]::placeholder{color:var(--muted);font-size:.8rem;letter-spacing:0;}
+  .modal-hint{font-size:.62rem;color:var(--muted);margin-top:7px;margin-bottom:20px;line-height:1.5;}
+  .modal-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
+  .btn-save{background:var(--phone);color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:opacity .2s;}
+  .btn-save:hover{opacity:.85;}
+  .btn-del{background:rgba(255,77,109,.15);color:var(--absent);border:1px solid rgba(255,77,109,.3);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
+  .btn-del:hover{background:rgba(255,77,109,.28);}
+  .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
+  .btn-cancel:hover{color:var(--text);}
+
+  @media print{
+    .toolbar,.stats,.progress-wrap,.class-tabs,.btn-edit,.btn-call,.modal-overlay{display:none!important;}
+    body{background:#fff;color:#000;}
+    .hero{background:#0057b7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .student-card{border:1px solid #ddd!important;background:#fff!important;break-inside:avoid;}
+    .student-card.present{background:#e6fff6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .student-card.absent{background:#fff0f3!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .stu-phone-disp{color:#6d28d9!important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="school-tag">ITT Agraria — Classi 3^</div>
+      <h1>APPELLO<br><span>COPENAGHEN</span></h1>
+    </div>
+    <div class="date-badge">8 — 14 MAGGIO 2026</div>
+  </div>
+  <div style="margin-top:10px;">
+    <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span class="stat-num tot" id="sTot">25</span><span class="stat-label">Totale</span></div>
+  <div class="stat"><span class="stat-num pres" id="sPres">0</span><span class="stat-label">Presenti</span></div>
+  <div class="stat"><span class="stat-num abs" id="sAbs">0</span><span class="stat-label">Assenti</span></div>
+  <div class="stat"><span class="stat-num pend" id="sPend">25</span><span class="stat-label">Da rilevare</span></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar">
+    <div class="pb-present" id="pbPres" style="width:0%"></div>
+    <div class="pb-absent" id="pbAbs" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <input type="search" id="searchBox" placeholder="🔍  Cerca cognome o nome…" oninput="applyFilters()">
+  <button class="btn-sm btn-all-pres" onclick="setAll('present')">✓ Tutti presenti</button>
+  <button class="btn-sm btn-reset" onclick="setAll('pending')">↺ Reset</button>
+  <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button></div>
+
+<div class="class-tabs">
+  <button class="class-tab active" onclick="filterClass('all',this)">Tutti (25)</button>
+  <button class="class-tab" onclick="filterClass('presenti',this)">Presenti</button>
+  <button class="class-tab" onclick="filterClass('assenti',this)">Assenti</button>
+  <button class="class-tab" onclick="filterClass('pending',this)">Da rilevare</button>
+</div>
+
+<div class="list-wrap" id="studentList"></div>
+
+<!-- MODAL TELEFONO -->
+<div class="modal-overlay" id="phoneModal" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-title">📱 Numero di Telefono</div>
+    <div class="modal-sname" id="modalName"></div>
+    <label>Numero (genitore / studente)</label>
+    <input type="tel" id="modalInput" placeholder="es. +39 333 123 4567" inputmode="tel" autocomplete="tel">
+    <div class="modal-hint">
+      <strong style="color:var(--phone)">📡 Chiamata dalla Danimarca:</strong><br>
+      Inserisci il numero <strong>senza prefisso</strong> (es. <code>333 123 4567</code>) oppure già con <code>+39</code>.<br>
+      L'app aggiunge automaticamente <strong>+39</strong> per chiamare l'Italia dall'estero.<br>
+      <span style="opacity:.7">Non inserire lo 0 iniziale dei cellulari — i numeri italiani iniziano già con 3xx.</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="savePhone()">💾 Salva</button>
+      <button class="btn-del" onclick="deletePhone()">🗑 Elimina</button>
+      <button class="btn-cancel" onclick="closeModal()">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyCSou-RKorHK3Opq1LnzETFPmO0Ym5t8Lo",
+  authDomain:"appello-copenaghen.firebaseapp.com",
+  projectId:"appello-copenaghen",
+  storageBucket:"appello-copenaghen.firebasestorage.app",
+  messagingSenderId:"950786805881",
+  appId:"1:950786805881:web:6ade5e5daed2a9b3fbc4a8"
+};
+const fbApp=initializeApp(firebaseConfig);
+const db=getFirestore(fbApp);
+const stateRef=doc(db,'appello','stati');
+const phoneRef=doc(db,'appello','telefoni');
+
+const STUDENTS=[
+  {cognome:"AVINO",nome:"PASQUALE",cf:"VNAPQL09T29E977W",classe:"3A"},
+  {cognome:"CARPENTIERI",nome:"MAURO",cf:"CRPMRA09H22E977Y",classe:"3A"},
+  {cognome:"COLLAZZO",nome:"MICHELE",cf:"CLLMHL09T16E977T",classe:"3A"},
+  {cognome:"FRUCI",nome:"GERVASIA",cf:"FRCGVS10B44E977B",classe:"3A"},
+  {cognome:"IACOVINO",nome:"ALESSANDRO",cf:"CVNLSN09S06E977M",classe:"3A"},
+  {cognome:"MICHIELLI",nome:"MARIO",cf:"MCHMRA09S28E977T",classe:"3A"},
+  {cognome:"MILANO",nome:"VINCENZO JUNIOR",cf:"MLNVCN10A04E977R",classe:"3A"},
+  {cognome:"RADESCA",nome:"SERENA",cf:"RDSSRN09M58E977H",classe:"3A"},
+  {cognome:"RAUCCI",nome:"IRENE",cf:"RCCRNI10B59E977F",classe:"3A"},
+  {cognome:"SASSANO",nome:"GINO",cf:"SSSGNI09L12G942C",classe:"3A"},
+  {cognome:"BAFUNNO",nome:"GIORGIA",cf:"BFNGRG09L45E977V",classe:"3B"},
+  {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3B"},
+  {cognome:"CAMPANA",nome:"SAMUELE",cf:"CMPSML09S25F138B",classe:"3B"},
+  {cognome:"CASELLA",nome:"MARIA BENEDETTA",cf:"CSLMBN09T55G942A",classe:"3B"},
+  {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3B"},
+  {cognome:"DAGROSA",nome:"ANGELO",cf:"DGRNGL09M14E977R",classe:"3B"},
+  {cognome:"DI RAGO",nome:"GIOELE",cf:"DRGGLI10C17E977Z",classe:"3B"},
+  {cognome:"FRUGUGIETTI REALE",nome:"MARIO",cf:"FRGMRA09M22E977T",classe:"3B"},
+  {cognome:"GALGANO",nome:"DAVIDE",cf:"GLGDVD09T25G942C",classe:"3B"},
+  {cognome:"NIGRO",nome:"MATTIA",cf:"NGRMTT09M03E977H",classe:"3B"},
+  {cognome:"NIGRO",nome:"SIMONE",cf:"NGRSMN09L30G942H",classe:"3B"},
+  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3B"},
+  {cognome:"PIZZUTO",nome:"FRANCESCO PIO",cf:"PZZFNC08T28E977P",classe:"3B"},
+  {cognome:"TOLVE",nome:"DESIRE'E",cf:"TLVDSR09T57E977G",classe:"3B"},
+  {cognome:"VINCI",nome:"MARILISA PIA",cf:"VNCMLS09P62G942S",classe:"3B"},
+];
+STUDENTS.forEach((s,i)=>s.n=i+1);
+
+const state={};
+const phones={};
+STUDENTS.forEach(s=>{state[s.cf]='pending';phones[s.cf]='';});
+
+const canCall=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let classFilter='all';
+let modalCF=null;
+
+function setSyncStatus(ok){
+  const el=document.getElementById('syncDot');
+  if(el){el.textContent=ok?'● SYNC':'● OFFLINE';el.style.color=ok?'var(--present)':'var(--absent)';}
+}
+
+function normalizePhone(raw){
+  let n=(raw||'').trim().replace(/[\s\-\.]/g,'');
+  if(!n)return'';
+  if(n.startsWith('00'))n='+'+n.slice(2);
+  else if(!n.startsWith('+'))n='+39'+n;
+  return n;
+}
+
+function ini(s){return(s.cognome[0]||'')+( s.nome[0]||'');}
+
+function statusHTML(st){
+  if(st==='present')return'<span class="stu-status status-pres">PRESENTE</span>';
+  if(st==='absent') return'<span class="stu-status status-abs">ASSENTE</span>';
+  return'<span class="stu-status status-pend">&#8212;</span>';
+}
+
+function cardHTML(s){
+  const st=state[s.cf]||'pending';
+  const norm=normalizePhone(phones[s.cf]||'');
+  const callBtn=norm&&canCall
+    ?`<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()" title="Chiama">📞</a>`
+    :'<span style="width:34px;flex-shrink:0"></span>';
+  return`
+    <span class="stu-num">${s.n}</span>
+    <div class="stu-avatar">${ini(s)}</div>
+    <div class="stu-info">
+      <div class="stu-name">${s.cognome} ${s.nome}</div>
+      <div class="stu-sub">
+        <span class="stu-cf">${s.cf}</span>
+        ${norm?`<span class="stu-phone-disp">📱 ${norm}</span>`:''}
+      </div>
+    </div>
+    ${callBtn}
+    <button class="btn-edit" onclick="_om(\'${s.cf}\')" title="Telefono">✏️</button>
+    ${statusHTML(st)}
+  `;
+}
+
+function buildCard(s){
+  const d=document.createElement('div');
+  d.id='sc-'+s.cf; d.className='student-card '+(state[s.cf]||'pending');
+  d.innerHTML=cardHTML(s); bind(d,s.cf); return d;
+}
+function bind(d,cf){
+  ['stu-avatar','stu-info','stu-status'].forEach(c=>{
+    const el=d.querySelector('.'+c);
+    if(el)el.onclick=e=>{e.stopPropagation();toggle(cf);};
+  });
+}
+function refreshCard(cf){
+  const s=STUDENTS.find(x=>x.cf===cf);
+  const old=document.getElementById('sc-'+cf);
+  if(!old||!s)return;
+  const h=old.classList.contains('hidden');
+  old.className='student-card '+(state[cf]||'pending')+(h?' hidden':'');
+  old.innerHTML=cardHTML(s); bind(old,cf);
+}
+
+function renderAll(){
+  const list=document.getElementById('studentList');
+  list.innerHTML='';
+  let last='';
+  STUDENTS.forEach(s=>{
+    if(s.classe!==last){
+      last=s.classe;
+      const h=document.createElement('div');
+      h.className='class-hdr';h.dataset.classe=s.classe;
+      h.textContent='Classe '+s.classe;list.appendChild(h);
+    }
+    list.appendChild(buildCard(s));
+  });
+  applyFilters(); updateStats();
+}
+
+async function toggle(cf){
+  const cur=state[cf]||'pending';
+  state[cf]=cur==='pending'?'present':cur==='present'?'absent':'pending';
+  refreshCard(cf); updateStats(); applyFilters();
+  try{await setDoc(stateRef,{[cf]:state[cf]},{merge:true});}catch(e){console.error(e);}
+}
+
+function updateStats(){
+  const pr=STUDENTS.filter(s=>state[s.cf]==='present').length;
+  const ab=STUDENTS.filter(s=>state[s.cf]==='absent').length;
+  const pe=STUDENTS.length-pr-ab;
+  document.getElementById('sTot').textContent=STUDENTS.length;
+  document.getElementById('sPres').textContent=pr;
+  document.getElementById('sAbs').textContent=ab;
+  document.getElementById('sPend').textContent=pe;
+  document.getElementById('pbPres').style.width=(pr/STUDENTS.length*100)+'%';
+  document.getElementById('pbAbs').style.width=(ab/STUDENTS.length*100)+'%';
+}
+
+window.setAll=async function(st){
+  STUDENTS.forEach(s=>state[s.cf]=st);
+  const b={};STUDENTS.forEach(s=>b[s.cf]=st);
+  renderAll();
+  try{await setDoc(stateRef,b);}catch(e){}
+};
+window.filterClass=function(type,btn){
+  classFilter=type;
+  document.querySelectorAll('.class-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); applyFilters();
+};
+function applyFilters(){
+  const q=(document.getElementById('searchBox').value||'').toLowerCase();
+  const vc=new Set();
+  STUDENTS.forEach(s=>{
+    const card=document.getElementById('sc-'+s.cf);if(!card)return;
+    const ms=!q||(s.cognome+' '+s.nome).toLowerCase().includes(q);
+    let mc=true;
+    if(classFilter==='presenti')mc=state[s.cf]==='present';
+    else if(classFilter==='assenti')mc=state[s.cf]==='absent';
+    else if(classFilter==='pending')mc=state[s.cf]==='pending';
+    card.classList.toggle('hidden',!(ms&&mc));
+    if(ms&&mc)vc.add(s.classe);
+  });
+  document.querySelectorAll('.class-hdr').forEach(h=>h.classList.toggle('hidden',!vc.has(h.dataset.classe)));
+}
+window.applyFilters=applyFilters;
+
+window._om=function(cf){
+  modalCF=cf;
+  const s=STUDENTS.find(x=>x.cf===cf);
+  document.getElementById('modalName').textContent=s.cognome+' '+s.nome+' — '+s.classe;
+  document.getElementById('modalInput').value=phones[cf]||'';
+  document.getElementById('phoneModal').classList.add('open');
+  setTimeout(()=>document.getElementById('modalInput').focus(),250);
+};
+window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');modalCF=null;};
+window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))window.closeModal();};
+window.savePhone=async function(){
+  if(!modalCF)return;
+  const raw=document.getElementById('modalInput').value.trim();
+  phones[modalCF]=raw; refreshCard(modalCF); window.closeModal();
+  try{await setDoc(phoneRef,{[modalCF]:raw},{merge:true});}catch(e){console.error(e);}
+};
+window.deletePhone=async function(){
+  if(!modalCF)return;
+  phones[modalCF]=''; refreshCard(modalCF); window.closeModal();
+  try{await setDoc(phoneRef,{[modalCF]:''},{merge:true});}catch(e){}
+};
+document.getElementById('modalInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')window.savePhone();
+  if(e.key==='Escape')window.closeModal();
+});
+
+// Real-time listeners
+onSnapshot(stateRef,snap=>{
+  if(snap.exists()){
+    const d=snap.data();
+    STUDENTS.forEach(s=>{if(d[s.cf])state[s.cf]=d[s.cf];});
+    renderAll();
+  }
+  setSyncStatus(true);
+},()=>setSyncStatus(false));
+
+onSnapshot(phoneRef,snap=>{
+  if(snap.exists()){
+    const d=snap.data();
+    STUDENTS.forEach(s=>{phones[s.cf]=d[s.cf]||'';refreshCard(s.cf);});
+  }
+},()=>{});
+
+renderAll();
+</script>
+</body>
+</html>
