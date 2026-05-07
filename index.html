@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appello — Copenaghen 2026 v13</title>
+<title>Appello — Copenaghen 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -17,6 +17,7 @@
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
 
   .hero{background:linear-gradient(135deg,#0057b7 0%,#003d82 50%,#0a0f1e 100%);padding:28px 24px 22px;position:relative;overflow:hidden;}
+  .hero::before{content:'🇩🇰';position:absolute;right:-10px;top:-10px;font-size:120px;opacity:.08;pointer-events:none;}
   .school-tag{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--flag-y);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
   h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:1px;color:#fff;}
   h1 span{color:var(--flag-y);}
@@ -128,15 +129,12 @@
 <div class="hero">
   <div class="hero-top">
     <div>
-      <div class="school-tag">ITT - Villa d'Agri — Classi 3^</div>
-      <h1>FSL / DANIMARCA<br><span>COPENAGHEN</span></h1>
+      <div class="school-tag">ITT Agraria — Classi 3^</div>
+      <h1>APPELLO<br><span>COPENAGHEN</span></h1>
     </div>
-    <div style="font-size:60px;opacity:0.15;pointer-events:none;line-height:1;">🇮🇹🇩🇰</div>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v16</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v17</div>
+  </div>
+  <div style="margin-top:10px;">
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
@@ -211,10 +209,7 @@ const phoneRef=doc(db,'appello','telefoni');
 
 const STUDENTS=[
   {cognome:"AVINO",nome:"PASQUALE",cf:"VNAPQL09T29E977W",classe:"3A"},
-  {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3A"},
-  {cognome:"BRUNO",nome:"ANGELO",cf:"BRNNGL09A01G942X",classe:"3A"},
   {cognome:"CARPENTIERI",nome:"MAURO",cf:"CRPMRA09H22E977Y",classe:"3A"},
-  {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3A"},
   {cognome:"COLLAZZO",nome:"MICHELE",cf:"CLLMHL09T16E977T",classe:"3A"},
   {cognome:"FRUCI",nome:"GERVASIA",cf:"FRCGVS10B44E977B",classe:"3A"},
   {cognome:"IACOVINO",nome:"ALESSANDRO",cf:"CVNLSN09S06E977M",classe:"3A"},
@@ -224,20 +219,21 @@ const STUDENTS=[
   {cognome:"RAUCCI",nome:"IRENE",cf:"RCCRNI10B59E977F",classe:"3A"},
   {cognome:"SASSANO",nome:"GINO",cf:"SSSGNI09L12G942C",classe:"3A"},
   {cognome:"BAFUNNO",nome:"GIORGIA",cf:"BFNGRG09L45E977V",classe:"3B"},
+  {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3B"},
   {cognome:"CAMPANA",nome:"SAMUELE",cf:"CMPSML09S25F138B",classe:"3B"},
   {cognome:"CASELLA",nome:"MARIA BENEDETTA",cf:"CSLMBN09T55G942A",classe:"3B"},
+  {cognome:"CIANCIARULO",nome:"ANGELICA",cf:"CNCNLC09D58E977C",classe:"3B"},
   {cognome:"DAGROSA",nome:"ANGELO",cf:"DGRNGL09M14E977R",classe:"3B"},
   {cognome:"DI RAGO",nome:"GIOELE",cf:"DRGGLI10C17E977Z",classe:"3B"},
   {cognome:"FRUGUGIETTI REALE",nome:"MARIO",cf:"FRGMRA09M22E977T",classe:"3B"},
   {cognome:"GALGANO",nome:"DAVIDE",cf:"GLGDVD09T25G942C",classe:"3B"},
   {cognome:"NIGRO",nome:"MATTIA",cf:"NGRMTT09M03E977H",classe:"3B"},
   {cognome:"NIGRO",nome:"SIMONE",cf:"NGRSMN09L30G942H",classe:"3B"},
-  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3A"},
+  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3B"},
   {cognome:"PIZZUTO",nome:"FRANCESCO PIO",cf:"PZZFNC08T28E977P",classe:"3B"},
   {cognome:"TOLVE",nome:"DESIRE'E",cf:"TLVDSR09T57E977G",classe:"3B"},
   {cognome:"VINCI",nome:"MARILISA PIA",cf:"VNCMLS09P62G942S",classe:"3B"},
 ];
-STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
 STUDENTS.forEach((s,i)=>s.n=i+1);
 
 const state={};
@@ -246,7 +242,7 @@ STUDENTS.forEach(s=>{state[s.cf]='pending';phones[s.cf]='';});
 
 const canCall=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let classFilter='all';
-window.modalCF=null;  // must be global — accessed by onclick handlers outside module scope
+let modalCF=null;
 
 function setSyncStatus(ok){
   const el=document.getElementById('syncDot');
@@ -380,33 +376,32 @@ function applyFilters(){
 window.applyFilters=applyFilters;
 
 window._om=function(cf){
-  window.modalCF=cf;
+  modalCF=cf;
   const s=STUDENTS.find(x=>x.cf===cf);
   document.getElementById('modalName').textContent=s.cognome+' '+s.nome+' — '+s.classe;
   document.getElementById('modalInput').value=phones[cf]||'';
   document.getElementById('phoneModal').classList.add('open');
   setTimeout(()=>document.getElementById('modalInput').focus(),250);
 };
-window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');window.modalCF=null;};
+window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');modalCF=null;};
 window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))window.closeModal();};
 window.savePhone=async function(){
-  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
-  if(!cf)return;
+  if(!modalCF)return;
   const raw=document.getElementById('modalInput').value.trim();
   window.closeModal();
   try{
-    await setDoc(phoneRef,{[cf]:raw},{merge:true});
+    await setDoc(phoneRef,{[modalCF]:raw},{merge:true});
+    // phones{} and cards will update automatically via the onSnapshot listener
   }catch(e){
     console.error('Errore salvataggio telefono:',e);
     alert('Errore salvataggio: '+e.message);
   }
 };
 window.deletePhone=async function(){
-  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
-  if(!cf)return;
+  if(!modalCF)return;
   window.closeModal();
   try{
-    await setDoc(phoneRef,{[cf]:''},{merge:true});
+    await setDoc(phoneRef,{[modalCF]:''},{merge:true});
   }catch(e){console.error(e);}
 };
 document.getElementById('modalInput').addEventListener('keydown',e=>{
