@@ -3,59 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appello — Copenaghen 2026 v13</title>
+<title>FSL Danimarca - Copenaghen v21</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0a0f1e; --surface:#111827; --card:#1a2235;
-    --border:rgba(255,255,255,0.07);
-    --present:#00d68f; --absent:#ff4d6d; --pending:#3b82f6;
-    --text:#e2e8f0; --muted:#64748b; --accent:#f59e0b;
-    --flag-y:#ffd700; --phone:#a78bfa;
-  }
+  :root{--bg:#0a0f1e;--surface:#111827;--card:#1a2235;--border:rgba(255,255,255,0.07);--present:#00d68f;--absent:#ff4d6d;--pending:#3b82f6;--text:#e2e8f0;--muted:#64748b;--accent:#f59e0b;--flag-y:#ffd700;--phone:#a78bfa;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
-
   .hero{background:linear-gradient(135deg,#0057b7 0%,#003d82 50%,#0a0f1e 100%);padding:28px 24px 22px;position:relative;overflow:hidden;}
   .school-tag{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--flag-y);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
   h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:1px;color:#fff;}
   h1 span{color:var(--flag-y);}
   .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
-  .date-badge{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--flag-y);font-family:'DM Mono',monospace;font-size:.65rem;padding:5px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
-
+  .date-badge{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--flag-y);font-family:'DM Mono',monospace;font-size:.65rem;padding:5px 10px;border-radius:6px;white-space:nowrap;}
   .stats{display:flex;gap:1px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border);}
-  .stat{flex:1;text-align:center;padding:8px 4px;border-radius:8px;}
+  .stat{flex:1;text-align:center;padding:8px 4px;}
   .stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;display:block;}
   .stat-num.tot{color:var(--text);}.stat-num.pres{color:var(--present);}.stat-num.abs{color:var(--absent);}.stat-num.pend{color:var(--pending);}
   .stat-label{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px;display:block;}
-
   .progress-wrap{background:var(--surface);padding:0 16px 14px;border-bottom:1px solid var(--border);}
   .progress-bar{height:6px;border-radius:3px;background:var(--card);overflow:hidden;display:flex;}
   .pb-present{background:var(--present);transition:width .4s ease;}
   .pb-absent{background:var(--absent);transition:width .4s ease;}
-
   .toolbar{display:flex;gap:8px;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap;}
-  .toolbar input{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 12px;border-radius:8px;outline:none;transition:border-color .2s;}
-  .toolbar input:focus{border-color:var(--accent);}
+  .toolbar input{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 12px;border-radius:8px;outline:none;}
   .toolbar input::placeholder{color:var(--muted);}
-  .btn-sm{font-family:'DM Mono',monospace;font-size:.68rem;padding:7px 11px;border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.5px;}
+  .btn-sm{font-family:'DM Mono',monospace;font-size:.68rem;padding:7px 11px;border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap;}
   .btn-all-pres{background:rgba(0,214,143,.12);color:var(--present);border-color:rgba(0,214,143,.25);}
-  .btn-all-pres:hover{background:rgba(0,214,143,.22);}
   .btn-reset{background:rgba(255,77,109,.1);color:var(--absent);border-color:rgba(255,77,109,.25);}
-  .btn-reset:hover{background:rgba(255,77,109,.2);}
+  .btn-add{background:rgba(167,139,250,.12);color:var(--phone);border-color:rgba(167,139,250,.25);}
   .btn-print{background:rgba(245,158,11,.12);color:var(--accent);border-color:rgba(245,158,11,.25);}
-  .btn-print:hover{background:rgba(245,158,11,.22);}
-
   .class-tabs{display:flex;gap:0;padding:12px 16px 0;background:var(--surface);border-bottom:1px solid var(--border);}
   .class-tab{font-family:'DM Mono',monospace;font-size:.72rem;padding:8px 16px;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;position:relative;top:1px;}
   .class-tab.active{color:var(--accent);background:var(--bg);border-color:var(--border);border-bottom-color:var(--bg);}
-  .class-tab:hover:not(.active){color:var(--text);background:var(--card);}
-
+  .list-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
   .class-hdr{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--accent);padding:14px 4px 6px;border-bottom:1px solid rgba(245,158,11,.2);margin-bottom:2px;}
   .class-hdr.hidden{display:none;}
-
-  .list-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
-
   .student-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);position:relative;overflow:hidden;transition:all .18s;}
   .student-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:10px 0 0 10px;background:var(--muted);transition:background .18s;}
   .student-card.present{border-color:rgba(0,214,143,.3);background:rgba(0,214,143,.05);}
@@ -63,74 +45,91 @@
   .student-card.absent{border-color:rgba(255,77,109,.3);background:rgba(255,77,109,.05);}
   .student-card.absent::before{background:var(--absent);}
   .student-card.hidden{display:none;}
-
   .stu-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);width:20px;flex-shrink:0;text-align:right;}
-
   .stu-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;cursor:pointer;transition:all .18s;background:var(--surface);color:var(--muted);border:1.5px solid var(--border);}
   .student-card.present .stu-avatar{background:rgba(0,214,143,.15);color:var(--present);border-color:rgba(0,214,143,.4);}
   .student-card.absent .stu-avatar{background:rgba(255,77,109,.15);color:var(--absent);border-color:rgba(255,77,109,.4);}
-
   .stu-info{flex:1;min-width:0;cursor:pointer;}
-  .stu-name{font-size:.86rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .18s;}
+  .stu-name{font-size:.86rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .student-card.present .stu-name{color:#fff;}
   .stu-sub{display:flex;gap:8px;align-items:center;margin-top:2px;flex-wrap:wrap;}
-  .stu-cf{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);letter-spacing:.5px;}
-  .stu-phone-disp{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--phone);letter-spacing:.3px;}
-
-  /* Call button — shown only when phone exists AND isMobile */
-  .btn-call{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:rgba(167,139,250,.18);color:var(--phone);cursor:pointer;transition:all .2s;flex-shrink:0;font-size:.95rem;text-decoration:none;-webkit-tap-highlight-color:transparent;}
-  .btn-call:hover{background:rgba(167,139,250,.35);transform:scale(1.1);}
-  .btn-call.hidden-call{display:none;}
-
-  /* Edit phone pencil button */
+  .stu-cf{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);}
+  .stu-phone-disp{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--phone);}
+  .btn-call{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:rgba(167,139,250,.18);color:var(--phone);cursor:pointer;transition:all .2s;flex-shrink:0;font-size:.95rem;text-decoration:none;}
+  .btn-call:hover{background:rgba(167,139,250,.35);}
   .btn-edit{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;transition:all .18s;}
   .btn-edit:hover{border-color:var(--phone);color:var(--phone);}
-
+  .btn-del-stu{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.1);color:var(--absent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:all .18s;}
+  .btn-del-stu:hover{background:rgba(255,77,109,.3);}
   .stu-status{font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.5px;flex-shrink:0;font-family:'DM Mono',monospace;cursor:pointer;transition:all .18s;}
   .status-pend{background:rgba(59,130,246,.15);color:var(--pending);}
   .status-pres{background:rgba(0,214,143,.15);color:var(--present);}
   .status-abs{background:rgba(255,77,109,.15);color:var(--absent);}
-
-  /* MODAL */
+  /* MODALS */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:999;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s;}
   .modal-overlay.open{opacity:1;pointer-events:all;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 22px 32px;width:100%;max-width:480px;transform:translateY(30px);transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
   .modal-overlay.open .modal{transform:translateY(0);}
   .modal-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
-  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--phone);letter-spacing:1px;margin-bottom:2px;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;margin-bottom:2px;}
+  .mt-phone{color:var(--phone);}.mt-add{color:var(--present);}
   .modal-sname{font-size:.8rem;color:var(--muted);margin-bottom:18px;}
-  .modal label{display:block;font-family:'DM Mono',monospace;font-size:.63rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
-  .modal input[type=tel]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:1.05rem;padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;letter-spacing:.5px;}
+  .modal label{display:block;font-family:'DM Mono',monospace;font-size:.63rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+  .modal input[type=tel],.modal input[type=text]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.95rem;padding:11px 14px;border-radius:10px;outline:none;transition:border-color .2s;margin-bottom:12px;}
   .modal input[type=tel]:focus{border-color:var(--phone);}
-  .modal input[type=tel]::placeholder{color:var(--muted);font-size:.8rem;letter-spacing:0;}
-  .modal-hint{font-size:.62rem;color:var(--muted);margin-top:7px;margin-bottom:20px;line-height:1.5;}
-  .modal-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
-  .btn-save{background:var(--phone);color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:opacity .2s;}
-  .btn-save:hover{opacity:.85;}
-  .btn-del{background:rgba(255,77,109,.15);color:var(--absent);border:1px solid rgba(255,77,109,.3);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-  .btn-del:hover{background:rgba(255,77,109,.28);}
-  .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-  .btn-cancel:hover{color:var(--text);}
-
-  /* Student management modal */
-  .modal-add-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--present);letter-spacing:1px;margin-bottom:14px;}
-  .modal input[type=text]{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:11px 14px;border-radius:10px;outline:none;transition:border-color .2s;margin-bottom:10px;}
   .modal input[type=text]:focus{border-color:var(--present);}
-  .modal input[type=text]::placeholder{color:var(--muted);}
+  .modal input::placeholder{color:var(--muted);font-size:.8rem;}
   .modal select{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.85rem;padding:11px 14px;border-radius:10px;outline:none;margin-bottom:16px;cursor:pointer;}
-  .btn-add-student{background:var(--present);color:#000;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%;transition:opacity .2s;}
-  .btn-add-student:hover{opacity:.85;}
-  .btn-del-student{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,77,109,.3);background:rgba(255,77,109,.1);color:var(--absent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;transition:all .18s;}
-  .btn-del-student:hover{background:rgba(255,77,109,.3);}
-  .tab-count{font-size:.65rem;opacity:.7;margin-left:3px;}
-  @media print {
-    .toolbar,.stats,.progress-wrap,.class-tabs,.btn-edit,.btn-call,.modal-overlay{display:none!important;}
+  .modal-hint{font-size:.62rem;color:var(--muted);margin-top:-4px;margin-bottom:18px;line-height:1.5;}
+  .modal-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
+  .btn-save{background:var(--phone);color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;}
+  .btn-save-add{background:var(--present);color:#000;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%;margin-bottom:8px;}
+  .btn-del{background:rgba(255,77,109,.15);color:var(--absent);border:1px solid rgba(255,77,109,.3);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;}
+  .btn-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;width:100%;}
+  .btn-wa{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:rgba(37,211,102,.18);color:#25d366;cursor:pointer;transition:all .2s;flex-shrink:0;font-size:.95rem;text-decoration:none;}
+  .btn-wa:hover{background:rgba(37,211,102,.35);}
+  /* WA broadcast modal */
+  .mt-wa{color:#25d366;}
+  .wa-tabs{display:flex;gap:6px;margin-bottom:14px;}
+  .wa-tab{font-family:'DM Mono',monospace;font-size:.68rem;padding:6px 12px;border-radius:7px;border:1px solid var(--border);cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;}
+  .wa-tab.active{color:#25d366;background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.3);}
+  .wa-msg-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .wa-msg-wrap textarea{background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:11px 14px;border-radius:10px;outline:none;resize:vertical;min-height:80px;line-height:1.5;}
+  .wa-msg-wrap textarea:focus{border-color:#25d366;}
+  .wa-room-select{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.82rem;padding:10px 14px;border-radius:10px;outline:none;margin-bottom:12px;cursor:pointer;}
+  .wa-recipients{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+  .btn-wa-send{background:#25d366;color:#fff;border:none;padding:11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn-wa-send:hover{opacity:.9;}
+  .room-view{padding:14px 16px;display:none;flex-direction:column;gap:10px;}
+  .room-view.active{display:flex;}
+  .room-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;}
+  .room-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;user-select:none;}
+  .room-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;color:var(--accent);}
+  .room-count{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);background:var(--surface);padding:3px 8px;border-radius:10px;}
+  .room-occupants{padding:0 14px 12px;display:flex;flex-direction:column;gap:5px;}
+  .occupant-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:8px;padding:8px 10px;}
+  .occupant-name{font-size:.82rem;font-weight:600;color:var(--text);}
+  .occupant-class{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);margin-left:6px;}
+  .btn-remove-occ{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);color:var(--absent);font-size:.65rem;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap;}
+  .btn-remove-occ:hover{background:rgba(255,77,109,.25);}
+  .btn-assign{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--accent);font-family:'DM Mono',monospace;font-size:.65rem;padding:5px 10px;border-radius:7px;cursor:pointer;margin:4px 0 0;align-self:flex-start;}
+  .btn-assign:hover{background:rgba(245,158,11,.2);}
+  .room-controls{display:flex;gap:8px;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;}
+  .room-controls span{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);}
+  .btn-add-room{background:rgba(245,158,11,.12);color:var(--accent);border:1px solid rgba(245,158,11,.25);font-family:'DM Mono',monospace;font-size:.68rem;padding:7px 11px;border-radius:7px;cursor:pointer;}
+  .btn-del-room{background:rgba(255,77,109,.1);color:var(--absent);border:1px solid rgba(255,77,109,.2);font-family:'DM Mono',monospace;font-size:.68rem;padding:7px 11px;border-radius:7px;cursor:pointer;}
+  /* assign modal */
+  .mt-room{color:var(--accent);}
+  .assign-list{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;margin-bottom:16px;}
+  .assign-item{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;transition:all .15s;}
+  .assign-item:hover{border-color:var(--accent);background:rgba(245,158,11,.05);}
+  .assign-item.assigned{opacity:.4;pointer-events:none;}
+    .toolbar,.stats,.progress-wrap,.class-tabs,.btn-edit,.btn-call,.btn-del-stu,.modal-overlay{display:none!important;}
     body{background:#fff;color:#000;}
     .hero{background:#0057b7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .student-card{border:1px solid #ddd!important;background:#fff!important;break-inside:avoid;}
     .student-card.present{background:#e6fff6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .student-card.absent{background:#fff0f3!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .stu-phone-disp{color:#6d28d9!important;}
   }
 </style>
 </head>
@@ -146,16 +145,16 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v19</div>
-    <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v21</div>
+    <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione…</span>
   </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><span class="stat-num tot" id="sTot">25</span><span class="stat-label">Totale</span></div>
+  <div class="stat"><span class="stat-num tot" id="sTot">0</span><span class="stat-label">Totale</span></div>
   <div class="stat"><span class="stat-num pres" id="sPres">0</span><span class="stat-label">Presenti</span></div>
   <div class="stat"><span class="stat-num abs" id="sAbs">0</span><span class="stat-label">Assenti</span></div>
-  <div class="stat"><span class="stat-num pend" id="sPend">25</span><span class="stat-label">Da rilevare</span></div>
+  <div class="stat"><span class="stat-num pend" id="sPend">0</span><span class="stat-label">Da rilevare</span></div>
 </div>
 
 <div class="progress-wrap">
@@ -169,64 +168,110 @@
   <input type="search" id="searchBox" placeholder="🔍  Cerca cognome o nome…" oninput="applyFilters()">
   <button class="btn-sm btn-all-pres" onclick="setAll('present')">✓ Tutti presenti</button>
   <button class="btn-sm btn-reset" onclick="setAll('pending')">↺ Reset</button>
-  <button class="btn-sm" style="background:rgba(0,214,143,.12);color:var(--present);border-color:rgba(0,214,143,.25);" onclick="openAddModal()">＋ Studente</button>
+  <button class="btn-sm" style="background:rgba(37,211,102,.12);color:#25d366;border-color:rgba(37,211,102,.25);" onclick="openWAModal()">💬 WhatsApp</button>
+  <button class="btn-sm btn-add" onclick="openAddModal()">＋ Studente</button>
   <button class="btn-sm btn-print" onclick="window.print()">🖨 Stampa</button>
 </div>
 
-<div class="class-tabs">
-  <button class="class-tab active" onclick="filterClass('all',this)">Tutti (25)</button>
-  <button class="class-tab" onclick="filterClass('presenti',this)">Presenti</button>
-  <button class="class-tab" onclick="filterClass('assenti',this)">Assenti</button>
-  <button class="class-tab" onclick="filterClass('pending',this)">Da rilevare</button>
+<div class="class-tabs" id="mainTabs">
+  <button class="class-tab active" id="tabAll" onclick="switchView('appello',this)">Appello</button>
+  <button class="class-tab" onclick="switchView('camere',this)">🛏 Camere</button>
+</div>
+
+<!-- APPELLO FILTERS (shown only in appello view) -->
+<div id="appelloFilters" style="background:var(--surface);border-bottom:1px solid var(--border);">
+  <div style="display:flex;gap:0;padding:0 16px;">
+    <button class="class-tab active" id="tabPresence" onclick="filterClass('all',this)">Tutti</button>
+    <button class="class-tab" onclick="filterClass('presenti',this)">Presenti</button>
+    <button class="class-tab" onclick="filterClass('assenti',this)">Assenti</button>
+    <button class="class-tab" onclick="filterClass('pending',this)">Da rilevare</button>
+  </div>
 </div>
 
 <div class="list-wrap" id="studentList"></div>
 
+<!-- CAMERE VIEW -->
+<div class="room-view" id="roomView">
+  <div class="room-controls">
+    <span>Gestisci le camere degli studenti</span>
+    <button class="btn-add-room" onclick="addRoom()">＋ Aggiungi camera</button>
+    <button class="btn-del-room" onclick="removeLastRoom()">− Rimuovi ultima</button>
+  </div>
+  <div id="roomList" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;"></div>
+</div>
+
 <!-- MODAL TELEFONO -->
-<div class="modal-overlay" id="phoneModal" onclick="bgClose(event)">
+<div class="modal-overlay" id="phoneModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-drag"></div>
-    <div class="modal-title">📱 Numero di Telefono</div>
+    <div class="modal-title mt-phone">📱 Numero di Telefono</div>
     <div class="modal-sname" id="modalName"></div>
     <label>Numero (genitore / studente)</label>
-    <input type="tel" id="modalInput" placeholder="es. +39 333 123 4567" inputmode="tel" autocomplete="tel">
-    <div class="modal-hint">
-      <strong style="color:var(--phone)">📡 Chiamata dalla Danimarca:</strong><br>
-      Inserisci il numero <strong>senza prefisso</strong> (es. <code>333 123 4567</code>) oppure già con <code>+39</code>.<br>
-      L'app aggiunge automaticamente <strong>+39</strong> per chiamare l'Italia dall'estero.<br>
-      <span style="opacity:.7">Non inserire lo 0 iniziale dei cellulari — i numeri italiani iniziano già con 3xx.</span>
-    </div>
+    <input type="tel" id="modalInput" placeholder="es. 333 123 4567" inputmode="tel" autocomplete="tel">
+    <div class="modal-hint">Inserisci senza prefisso — l'app aggiunge +39 automaticamente per chiamare dall'estero.</div>
     <div class="modal-actions">
       <button class="btn-save" onclick="savePhone()">💾 Salva</button>
       <button class="btn-del" onclick="deletePhone()">🗑 Elimina</button>
-      <button class="btn-cancel" onclick="closeModal()">Annulla</button>
+      <button class="btn-cancel" style="width:auto;" onclick="closeModal()">Annulla</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL AGGIUNGI STUDENTE -->
-<div class="modal-overlay" id="addModal" onclick="bgCloseAdd(event)">
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)closeAddModal()">
   <div class="modal">
     <div class="modal-drag"></div>
-    <div class="modal-add-title">➕ Aggiungi Studente</div>
+    <div class="modal-title mt-add">➕ Aggiungi Studente</div>
     <label>Cognome</label>
-    <input type="text" id="addCognome" placeholder="es. ROSSI" style="text-transform:uppercase;">
+    <input type="text" id="addCognome" placeholder="es. ROSSI" oninput="this.value=this.value.toUpperCase()">
     <label>Nome</label>
-    <input type="text" id="addNome" placeholder="es. MARIO">
+    <input type="text" id="addNome" placeholder="es. MARIO" oninput="this.value=this.value.toUpperCase()">
     <label>Codice Fiscale</label>
-    <input type="text" id="addCF" placeholder="es. RSSMRA00A01G942X" style="text-transform:uppercase;">
+    <input type="text" id="addCF" placeholder="es. RSSMRA00A01G942X" oninput="this.value=this.value.toUpperCase()">
     <label>Classe</label>
-    <select id="addClasse">
-      <option value="3A">3A</option>
-      <option value="3B">3B</option>
-    </select>
-    <button class="btn-add-student" onclick="addStudent()">✓ Aggiungi</button>
-    <button class="btn-cancel" style="width:100%;margin-top:8px;" onclick="closeAddModal()">Annulla</button>
+    <select id="addClasse"><option value="3A">3A</option><option value="3B">3B</option></select>
+    <button class="btn-save-add" onclick="addStudent()">✓ Aggiungi</button>
+    <button class="btn-cancel" onclick="closeAddModal()">Annulla</button>
   </div>
 </div>
+
+<!-- MODAL WHATSAPP BROADCAST -->
+<div class="modal-overlay" id="waModal" onclick="if(event.target===this)closeWAModal()">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-title mt-wa">💬 Invia WhatsApp</div>
+    <div class="wa-tabs">
+      <button class="wa-tab active" id="waTab0" onclick="setWATarget('all',this)">Tutti</button>
+      <button class="wa-tab" id="waTab1" onclick="setWATarget('camera',this)">Per camera</button>
+      <button class="wa-tab" id="waTab2" onclick="setWATarget('presenti',this)">Presenti</button>
+      <button class="wa-tab" id="waTab3" onclick="setWATarget('assenti',this)">Assenti</button>
+    </div>
+    <select class="wa-room-select" id="waRoomSelect" style="display:none;" onchange="updateWARecipients()">
+    </select>
+    <div class="wa-msg-wrap">
+      <label>Messaggio</label>
+      <textarea id="waText" placeholder="Scrivi il tuo messaggio…" oninput="updateWARecipients()"></textarea>
+    </div>
+    <div class="wa-recipients" id="waRecipients"></div>
+    <button class="btn-wa-send" onclick="sendWAMessages()">💬 Apri WhatsApp per ogni destinatario</button>
+    <button class="btn-cancel" onclick="closeWAModal()">Annulla</button>
+  </div>
+</div>
+
+<!-- MODAL ASSEGNA CAMERA -->
+<div class="modal-overlay" id="assignModal" onclick="if(event.target===this)closeAssignModal()">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-title mt-room">🛏 Assegna Studente</div>
+    <div class="modal-sname" id="assignRoomName"></div>
+    <div class="assign-list" id="assignList"></div>
+    <button class="btn-cancel" onclick="closeAssignModal()">Chiudi</button>
+  </div>
+</div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, onSnapshot, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyCSou-RKorHK3Opq1LnzETFPmO0Ym5t8Lo",
@@ -238,14 +283,13 @@ const firebaseConfig={
 };
 const fbApp=initializeApp(firebaseConfig);
 const db=getFirestore(fbApp);
+const stateRef  =doc(db,'appello','stati');
+const phoneRef  =doc(db,'appello','telefoni');
+const extrasRef =doc(db,'appello','studenti_extra');
+const roomsRef  =doc(db,'appello','camere'); // {numRooms:N, room_1:[cf,...], room_2:[cf,...], ...}
 
-enableIndexedDbPersistence(db).catch(err => console.error("Persistence error:", err.code));
-
-const stateRef=doc(db,'appello','stati');
-const phoneRef=doc(db,'appello','telefoni');
-const studentsRef=doc(db,'appello','studenti_extra'); // stores added/removed students
-
-const STUDENTS=[
+// ── BASE STUDENTS ─────────────────────────────────────────────────
+const BASE=[
   {cognome:"AVINO",nome:"PASQUALE",cf:"VNAPQL09T29E977W",classe:"3A"},
   {cognome:"BONADUCE",nome:"DORIANA",cf:"BNDDRN09L57E977Z",classe:"3A"},
   {cognome:"BRUNO",nome:"ANGELO",cf:"BRNNGL09A01G942X",classe:"3A"},
@@ -255,6 +299,7 @@ const STUDENTS=[
   {cognome:"IACOVINO",nome:"ALESSANDRO",cf:"CVNLSN09S06E977M",classe:"3A"},
   {cognome:"MICHIELLI",nome:"MARIO",cf:"MCHMRA09S28E977T",classe:"3A"},
   {cognome:"MILANO",nome:"VINCENZO JUNIOR",cf:"MLNVCN10A04E977R",classe:"3A"},
+  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3A"},
   {cognome:"RADESCA",nome:"SERENA",cf:"RDSSRN09M58E977H",classe:"3A"},
   {cognome:"RAUCCI",nome:"IRENE",cf:"RCCRNI10B59E977F",classe:"3A"},
   {cognome:"SASSANO",nome:"GINO",cf:"SSSGNI09L12G942C",classe:"3A"},
@@ -267,72 +312,69 @@ const STUDENTS=[
   {cognome:"GALGANO",nome:"DAVIDE",cf:"GLGDVD09T25G942C",classe:"3B"},
   {cognome:"NIGRO",nome:"MATTIA",cf:"NGRMTT09M03E977H",classe:"3B"},
   {cognome:"NIGRO",nome:"SIMONE",cf:"NGRSMN09L30G942H",classe:"3B"},
-  {cognome:"ORLANDO",nome:"DALILA",cf:"RLNDLL09S68E977X",classe:"3A"},
   {cognome:"PIZZUTO",nome:"FRANCESCO PIO",cf:"PZZFNC08T28E977P",classe:"3B"},
   {cognome:"TOLVE",nome:"DESIRE'E",cf:"TLVDSR09T57E977G",classe:"3B"},
   {cognome:"VINCI",nome:"MARILISA PIA",cf:"VNCMLS09P62G942S",classe:"3B"},
 ];
-STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
-STUDENTS.forEach((s,i)=>s.n=i+1);
 
+let STUDENTS=[...BASE];
 const state={};
 const phones={};
+const removed=new Set();
 STUDENTS.forEach(s=>{state[s.cf]='pending';phones[s.cf]='';});
 
 const canCall=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let classFilter='all';
-window.modalCF=null;  // must be global — accessed by onclick handlers outside module scope
+window.modalCF=null;
 
-function setSyncStatus(ok){
+// ── HELPERS ───────────────────────────────────────────────────────
+function sync(ok){
   const el=document.getElementById('syncDot');
   if(el){el.textContent=ok?'● SYNC':'● OFFLINE';el.style.color=ok?'var(--present)':'var(--absent)';}
 }
-
-function normalizePhone(raw){
+function normPhone(raw){
   let n=(raw||'').trim().replace(/[\s\-\.]/g,'');
   if(!n)return'';
   if(n.startsWith('00'))n='+'+n.slice(2);
   else if(!n.startsWith('+'))n='+39'+n;
   return n;
 }
-
-function ini(s){return(s.cognome[0]||'')+( s.nome[0]||'');}
-
-function statusHTML(st){
+function ini(s){return(s.cognome[0]||'')+(s.nome[0]||'');}
+function stHTML(st){
   if(st==='present')return'<span class="stu-status status-pres">PRESENTE</span>';
   if(st==='absent') return'<span class="stu-status status-abs">ASSENTE</span>';
   return'<span class="stu-status status-pend">&#8212;</span>';
 }
-
+function getRoomLabel(cf){
+  for(let i=1;i<=numRooms;i++){
+    if((roomOccupants['room_'+i]||[]).includes(cf)) return 'Cam.'+i;
+  }
+  return '';
+}
 function cardHTML(s){
   const st=state[s.cf]||'pending';
-  const norm=normalizePhone(phones[s.cf]||'');
-  const callBtn=norm&&canCall
-    ?`<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()" title="Chiama">📞</a>`
-    :'<span style="width:34px;flex-shrink:0"></span>';
-  return`
-    <span class="stu-num">${s.n}</span>
+  const ph=normPhone(phones[s.cf]||'');
+  const call=ph&&canCall?`<a class="btn-call" href="tel:${ph}" onclick="event.stopPropagation()">📞</a>`:'<span style="width:34px;flex-shrink:0"></span>';
+  const waBtn=ph?`<a class="btn-wa" href="https://wa.me/${ph.replace('+','')}" target="_blank" onclick="event.stopPropagation()" title="WhatsApp">💬</a>`:'<span style="width:34px;flex-shrink:0"></span>';
+  const del=s.extra?`<button class="btn-del-stu" onclick="removeStudent('${s.cf}')" title="Rimuovi">✕</button>`:'';
+  const room=getRoomLabel(s.cf);
+  const roomBadge=room?`<span style="font-family:'DM Mono',monospace;font-size:.56rem;background:rgba(245,158,11,.15);color:var(--accent);padding:2px 6px;border-radius:8px;">🛏 ${room}</span>`:'';
+  return`<span class="stu-num">${s.n}</span>
     <div class="stu-avatar">${ini(s)}</div>
     <div class="stu-info">
       <div class="stu-name">${s.cognome} ${s.nome}</div>
-      <div class="stu-sub">
-        <span class="stu-cf">${s.cf}</span>
-        ${norm?`<span class="stu-phone-disp">📱 ${norm}</span>`:''}
-      </div>
+      <div class="stu-sub"><span class="stu-cf">${s.cf}</span>${ph?`<span class="stu-phone-disp">📱 ${ph}</span>`:''}${roomBadge}</div>
     </div>
-    ${callBtn}
-    <button class="btn-edit" onclick="_om('${s.cf}')" title="Telefono">✏️</button>
-    ${s.extra?`<button class="btn-del-student" onclick="removeStudent('${s.cf}')" title="Rimuovi">✕</button>`:''}
-    ${statusHTML(st)}
-  `;
+    ${call}${waBtn}
+    <button class="btn-edit" onclick="_om('${s.cf}')">✏️</button>
+    ${del}${stHTML(st)}`;
 }
-
 function buildCard(s){
   const d=document.createElement('div');
   d.id='sc-'+s.cf; d.className='student-card '+(state[s.cf]||'pending');
-  d.innerHTML=cardHTML(s); bind(d,s.cf); return d;
+  d.innerHTML=cardHTML(s); bindCard(d,s.cf); return d;
 }
-function bind(d,cf){
+function bindCard(d,cf){
   ['stu-avatar','stu-info','stu-status'].forEach(c=>{
     const el=d.querySelector('.'+c);
     if(el)el.onclick=e=>{e.stopPropagation();toggle(cf);};
@@ -344,10 +386,11 @@ function refreshCard(cf){
   if(!old||!s)return;
   const h=old.classList.contains('hidden');
   old.className='student-card '+(state[cf]||'pending')+(h?' hidden':'');
-  old.innerHTML=cardHTML(s); bind(old,cf);
+  old.innerHTML=cardHTML(s); bindCard(old,cf);
 }
-
-function renderAll(){
+function rebuildList(){
+  STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
+  STUDENTS.forEach((s,i)=>s.n=i+1);
   const list=document.getElementById('studentList');
   list.innerHTML='';
   let last='';
@@ -360,16 +403,16 @@ function renderAll(){
     }
     list.appendChild(buildCard(s));
   });
-  applyFilters(); updateStats(); updateTabCount();
+  applyFilters(); updateStats();
 }
 
+// ── ACTIONS ───────────────────────────────────────────────────────
 async function toggle(cf){
-  const cur=state[cf]||'pending';
-  state[cf]=cur==='pending'?'present':cur==='present'?'absent':'pending';
+  const c=state[cf]||'pending';
+  state[cf]=c==='pending'?'present':c==='present'?'absent':'pending';
   refreshCard(cf); updateStats(); applyFilters();
   try{await setDoc(stateRef,{[cf]:state[cf]},{merge:true});}catch(e){console.error(e);}
 }
-
 function updateStats(){
   const pr=STUDENTS.filter(s=>state[s.cf]==='present').length;
   const ab=STUDENTS.filter(s=>state[s.cf]==='absent').length;
@@ -380,18 +423,14 @@ function updateStats(){
   document.getElementById('sPend').textContent=pe;
   document.getElementById('pbPres').style.width=(pr/STUDENTS.length*100)+'%';
   document.getElementById('pbAbs').style.width=(ab/STUDENTS.length*100)+'%';
+  const tabAll=document.getElementById('tabAll');
+  if(tabAll&&currentView==='appello') tabAll.textContent='Appello ('+STUDENTS.length+')';
 }
-
 window.setAll=async function(st){
-  // Reset ONLY attendance states — never touch phone numbers
   STUDENTS.forEach(s=>state[s.cf]=st);
-  const b={};
-  STUDENTS.forEach(s=>b[s.cf]=st);
-  renderAll();
-  try{
-    // Write only state document, phone document untouched
-    await setDoc(stateRef,b);
-  }catch(e){console.error(e);}
+  const b={};STUDENTS.forEach(s=>b[s.cf]=st);
+  rebuildList();
+  try{await setDoc(stateRef,b);}catch(e){}
 };
 window.filterClass=function(type,btn){
   classFilter=type;
@@ -415,57 +454,39 @@ function applyFilters(){
 }
 window.applyFilters=applyFilters;
 
+// ── PHONE MODAL ───────────────────────────────────────────────────
 window._om=function(cf){
   window.modalCF=cf;
   const s=STUDENTS.find(x=>x.cf===cf);
   document.getElementById('modalName').textContent=s.cognome+' '+s.nome+' — '+s.classe;
   document.getElementById('modalInput').value=phones[cf]||'';
   document.getElementById('phoneModal').classList.add('open');
-  document.getElementById('modalInput').focus(); // Focus immediato per tastiera mobile
+  setTimeout(()=>document.getElementById('modalInput').focus(),250);
 };
 window.closeModal=function(){document.getElementById('phoneModal').classList.remove('open');window.modalCF=null;};
-window.bgClose=function(e){if(e.target===document.getElementById('phoneModal'))window.closeModal();};
 window.savePhone=async function(){
-  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
-  if(!cf)return;
+  const cf=window.modalCF; if(!cf)return;
   const raw=document.getElementById('modalInput').value.trim();
-  phones[cf] = raw; // Aggiornamento ottimistico locale
-  renderAll();      // Rendi subito visibile il cambiamento
   window.closeModal();
-  try{
-    await setDoc(phoneRef,{[cf]:raw},{merge:true});
-  }catch(e){
-    console.error('Errore salvataggio telefono:',e);
-    alert('Errore salvataggio: '+e.message);
-  }
+  try{await setDoc(phoneRef,{[cf]:raw},{merge:true});}catch(e){alert('Errore: '+e.message);}
 };
 window.deletePhone=async function(){
-  const cf=window.modalCF;  // capture BEFORE closeModal nulls it
-  if(!cf)return;
-  phones[cf] = ''; // Aggiornamento ottimistico locale
-  renderAll();
+  const cf=window.modalCF; if(!cf)return;
   window.closeModal();
-  try{
-    await setDoc(phoneRef,{[cf]:''},{merge:true});
-  }catch(e){console.error(e);}
+  try{await setDoc(phoneRef,{[cf]:''},{merge:true});}catch(e){}
 };
 document.getElementById('modalInput').addEventListener('keydown',e=>{
   if(e.key==='Enter')window.savePhone();
   if(e.key==='Escape')window.closeModal();
 });
 
-// ── STUDENT MANAGEMENT ───────────────────────────────────────────
+// ── ADD/REMOVE STUDENTS ───────────────────────────────────────────
 window.openAddModal=function(){
-  document.getElementById('addCognome').value='';
-  document.getElementById('addNome').value='';
-  document.getElementById('addCF').value='';
-  document.getElementById('addClasse').value='3A';
+  ['addCognome','addNome','addCF'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('addModal').classList.add('open');
   setTimeout(()=>document.getElementById('addCognome').focus(),250);
 };
 window.closeAddModal=function(){document.getElementById('addModal').classList.remove('open');};
-window.bgCloseAdd=function(e){if(e.target===document.getElementById('addModal'))window.closeAddModal();};
-
 window.addStudent=async function(){
   const cognome=document.getElementById('addCognome').value.trim().toUpperCase();
   const nome=document.getElementById('addNome').value.trim().toUpperCase();
@@ -473,79 +494,266 @@ window.addStudent=async function(){
   const classe=document.getElementById('addClasse').value;
   if(!cognome||!nome||!cf){alert('Compila tutti i campi.');return;}
   if(STUDENTS.find(s=>s.cf===cf)){alert('Studente già presente.');return;}
-  
-  const newStu = {cognome,nome,cf,classe,extra:true};
-  STUDENTS.push(newStu); // Aggiornamento ottimistico
-  state[cf] = 'pending';
-  renderAll();
   window.closeAddModal();
-  try{
-    await setDoc(studentsRef,{[cf]:{cognome,nome,cf,classe,extra:true}},{merge:true});
-  }catch(e){alert('Errore: '+e.message);}
+  try{await setDoc(extrasRef,{[cf]:{cognome,nome,cf,classe,extra:true,removed:false}},{merge:true});}
+  catch(e){alert('Errore: '+e.message);}
 };
-
 window.removeStudent=async function(cf){
-  if(!confirm('Rimuovere questo studente dalla lista?'))return;
-  try{
-    // Mark as removed in Firestore
-    const idx=STUDENTS.findIndex(x=>x.cf===cf);
-    if(idx>=0) STUDENTS.splice(idx,1); // Aggiornamento ottimistico
-    renderAll();
-    await setDoc(studentsRef,{[cf]:{removed:true}},{merge:true});
-  }catch(e){alert('Errore: '+e.message);}
+  if(!confirm('Rimuovere questo studente?'))return;
+  try{await setDoc(extrasRef,{[cf]:{removed:true,cf}},{merge:true});}
+  catch(e){alert('Errore: '+e.message);}
 };
 
-function updateTabCount(){
-  const total=STUDENTS.length;
-  document.querySelectorAll('.class-tab')[0].innerHTML=`Tutti <span class="tab-count">(${total})</span>`;
+// ── WHATSAPP ──────────────────────────────────────────────────────
+let waTarget='all';
+
+window.openWAModal=function(){
+  waTarget='all';
+  document.getElementById('waText').value='';
+  document.querySelectorAll('.wa-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('waTab0').classList.add('active');
+  document.getElementById('waRoomSelect').style.display='none';
+  updateWARecipients();
+  document.getElementById('waModal').classList.add('open');
+  setTimeout(()=>document.getElementById('waText').focus(),250);
+};
+window.closeWAModal=function(){document.getElementById('waModal').classList.remove('open');};
+
+window.setWATarget=function(target,btn){
+  waTarget=target;
+  document.querySelectorAll('.wa-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const roomSel=document.getElementById('waRoomSelect');
+  if(target==='camera'){
+    // Populate room options
+    roomSel.innerHTML='';
+    for(let i=1;i<=numRooms;i++){
+      const n=(roomOccupants['room_'+i]||[]).length;
+      const opt=document.createElement('option');
+      opt.value='room_'+i; opt.textContent=`Camera ${i} (${n} studenti)`;
+      roomSel.appendChild(opt);
+    }
+    roomSel.style.display='block';
+  } else {
+    roomSel.style.display='none';
+  }
+  updateWARecipients();
+};
+
+window.updateWARecipients=function(){
+  const recipients=getWARecipients();
+  const withPhone=recipients.filter(s=>phones[s.cf]&&normPhone(phones[s.cf]));
+  const noPhone=recipients.filter(s=>!phones[s.cf]||!normPhone(phones[s.cf]));
+  let html=`<strong style="color:var(--text)">${withPhone.length}</strong> destinatari con numero`;
+  if(noPhone.length) html+=` · <span style="color:var(--absent)">${noPhone.length} senza numero</span>`;
+  if(withPhone.length){
+    html+='<br>'+withPhone.map(s=>`${s.cognome} ${s.nome}`).join(', ');
+  }
+  document.getElementById('waRecipients').innerHTML=html;
+};
+
+function getWARecipients(){
+  if(waTarget==='all') return STUDENTS;
+  if(waTarget==='presenti') return STUDENTS.filter(s=>state[s.cf]==='present');
+  if(waTarget==='assenti')  return STUDENTS.filter(s=>state[s.cf]==='absent');
+  if(waTarget==='camera'){
+    const key=document.getElementById('waRoomSelect').value;
+    const cfs=roomOccupants[key]||[];
+    return STUDENTS.filter(s=>cfs.includes(s.cf));
+  }
+  return [];
 }
 
-// ── LISTENERS ─────────────────────────────────────────────────────
-// Strategy: each listener independently updates its data then calls renderAll.
-// renderAll always reads from the current state{} and phones{} objects.
-// No race condition possible because JS is single-threaded.
+window.sendWAMessages=function(){
+  const msg=document.getElementById('waText').value.trim();
+  const recipients=getWARecipients().filter(s=>phones[s.cf]&&normPhone(phones[s.cf]));
+  if(!recipients.length){alert('Nessun destinatario con numero di telefono.');return;}
+  if(!msg){alert('Scrivi un messaggio prima di inviare.');return;}
+  window.closeWAModal();
+  // Open WA for each recipient with a small delay to avoid popup blocking
+  const encoded=encodeURIComponent(msg);
+  recipients.forEach((s,i)=>{
+    setTimeout(()=>{
+      const num=normPhone(phones[s.cf]).replace('+','');
+      window.open(`https://wa.me/${num}?text=${encoded}`,'_blank');
+    }, i*800);
+  });
+};
 
-// Students listener — syncs added/removed students across devices
-onSnapshot(studentsRef, snap=>{
+// ── ROOM STATE ────────────────────────────────────────────────────
+let numRooms=5;
+const roomOccupants={}; // roomKey -> [cf, ...]
+for(let i=1;i<=10;i++) roomOccupants['room_'+i]=[];
+let assignTargetRoom=null;
+let currentView='appello';
+
+// ── VIEW SWITCH ───────────────────────────────────────────────────
+window.switchView=function(view,btn){
+  currentView=view;
+  document.querySelectorAll('#mainTabs .class-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('studentList').style.display=view==='appello'?'flex':'none';
+  document.getElementById('appelloFilters').style.display=view==='appello'?'block':'none';
+  document.getElementById('roomView').style.display=view==='camere'?'flex':'none';
+  if(view==='camere') renderRooms();
+};
+
+// ── RENDER ROOMS ──────────────────────────────────────────────────
+function renderRooms(){
+  const list=document.getElementById('roomList');
+  list.innerHTML='';
+  for(let i=1;i<=numRooms;i++){
+    const key='room_'+i;
+    const occs=roomOccupants[key]||[];
+    const div=document.createElement('div');
+    div.className='room-card';
+    const names=occs.map(cf=>{
+      const s=STUDENTS.find(x=>x.cf===cf);
+      return s?`<div class="occupant-row">
+        <span><span class="occupant-name">${s.cognome} ${s.nome}</span><span class="occupant-class">${s.classe}</span></span>
+        <button class="btn-remove-occ" onclick="removeFromRoom('${key}','${cf}')">✕ Rimuovi</button>
+      </div>`:'';
+    }).join('');
+    div.innerHTML=`
+      <div class="room-header">
+        <span class="room-name">📦 Camera ${i}</span>
+        <span class="room-count">${occs.length} student${occs.length===1?'e':'i'}</span>
+      </div>
+      <div class="room-occupants">
+        ${names||'<span style="font-size:.75rem;color:var(--muted);padding:4px 0;display:block;">Nessuno assegnato</span>'}
+        <button class="btn-assign" onclick="openAssignModal('${key}',${i})">＋ Assegna studente</button>
+      </div>`;
+    list.appendChild(div);
+  }
+}
+
+// ── ASSIGN MODAL ──────────────────────────────────────────────────
+window.openAssignModal=function(roomKey,roomNum){
+  assignTargetRoom=roomKey;
+  document.getElementById('assignRoomName').textContent='Camera '+roomNum;
+  // Build list of students not yet in this room
+  const inRoom=roomOccupants[roomKey]||[];
+  // All assigned CFs across all rooms
+  const allAssigned=new Set();
+  for(let i=1;i<=numRooms;i++){
+    (roomOccupants['room_'+i]||[]).forEach(cf=>allAssigned.add(cf));
+  }
+  const aList=document.getElementById('assignList');
+  aList.innerHTML='';
+  const sorted=[...STUDENTS].sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
+  sorted.forEach(s=>{
+    const inThis=inRoom.includes(s.cf);
+    const inOther=!inThis&&allAssigned.has(s.cf);
+    // Find which room this student is already in
+    let roomLabel='';
+    if(inOther){
+      for(let i=1;i<=numRooms;i++){
+        if((roomOccupants['room_'+i]||[]).includes(s.cf)){roomLabel=` → Cam. ${i}`;break;}
+      }
+    }
+    const item=document.createElement('div');
+    item.className='assign-item'+(inOther?' assigned':'');
+    item.innerHTML=`
+      <span><strong style="font-size:.84rem">${s.cognome} ${s.nome}</strong>
+        <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-left:6px;">${s.classe}${roomLabel}</span></span>
+      ${inThis?'<span style="color:var(--present);font-size:.7rem;">✓ Presente</span>':''}`;
+    if(!inThis&&!inOther){
+      item.onclick=()=>assignToRoom(s.cf);
+    }
+    aList.appendChild(item);
+  });
+  document.getElementById('assignModal').classList.add('open');
+};
+window.closeAssignModal=function(){
+  document.getElementById('assignModal').classList.remove('open');
+  assignTargetRoom=null;
+};
+
+async function assignToRoom(cf){
+  if(!assignTargetRoom)return;
+  const occs=[...(roomOccupants[assignTargetRoom]||[])];
+  if(!occs.includes(cf)) occs.push(cf);
+  roomOccupants[assignTargetRoom]=occs;
+  window.closeAssignModal();
+  renderRooms();
+  await saveRooms();
+}
+
+window.removeFromRoom=async function(roomKey,cf){
+  roomOccupants[roomKey]=(roomOccupants[roomKey]||[]).filter(x=>x!==cf);
+  renderRooms();
+  await saveRooms();
+};
+
+window.addRoom=async function(){
+  numRooms=Math.min(numRooms+1,20);
+  renderRooms();
+  await saveRooms();
+};
+window.removeLastRoom=async function(){
+  if(numRooms<=1)return;
+  const key='room_'+numRooms;
+  if((roomOccupants[key]||[]).length>0){if(!confirm('La Camera '+numRooms+' ha studenti assegnati. Rimuoverla?'))return;}
+  roomOccupants[key]=[];
+  numRooms=Math.max(numRooms-1,1);
+  renderRooms();
+  await saveRooms();
+};
+
+async function saveRooms(){
+  const data={numRooms};
+  for(let i=1;i<=10;i++) data['room_'+i]=roomOccupants['room_'+i]||[];
+  try{await setDoc(roomsRef,data);}catch(e){console.error('Rooms save error:',e);}
+}
+
+// ── FIRESTORE LISTENERS ───────────────────────────────────────────
+onSnapshot(roomsRef,snap=>{
   if(snap.exists()){
     const d=snap.data();
-    Object.values(d).forEach(s=>{
-      if(s.removed){
-        // Remove from STUDENTS array
-        const idx=STUDENTS.findIndex(x=>x.cf===s.cf);
-        if(idx>=0) STUDENTS.splice(idx,1);
-      } else if(s.extra && !STUDENTS.find(x=>x.cf===s.cf)){
-        // Add extra student
-        STUDENTS.push({cognome:s.cognome,nome:s.nome,cf:s.cf,classe:s.classe,extra:true});
-        state[s.cf]=state[s.cf]||'pending';
-        phones[s.cf]=phones[s.cf]||'';
-      }
-    });
-    STUDENTS.sort((a,b)=>a.classe.localeCompare(b.classe)||a.cognome.localeCompare(b.cognome));
-    STUDENTS.forEach((s,i)=>s.n=i+1);
+    numRooms=d.numRooms||5;
+    for(let i=1;i<=10;i++) roomOccupants['room_'+i]=d['room_'+i]||[];
   }
-  renderAll();
+  if(currentView==='camere') renderRooms();
 },()=>{});
 
-onSnapshot(stateRef, snap=>{
+onSnapshot(extrasRef,snap=>{
+  const extras=snap.exists()?snap.data():{};
+  // Rebuild STUDENTS from BASE + extras
+  const rem=new Set();
+  const add=[];
+  Object.values(extras).forEach(e=>{
+    if(e.removed) rem.add(e.cf);
+    else if(e.extra){add.push(e);state[e.cf]=state[e.cf]||'pending';phones[e.cf]=phones[e.cf]||'';}
+  });
+  STUDENTS=[...BASE.filter(s=>!rem.has(s.cf)),...add];
+  rebuildList();
+},()=>{});
+
+onSnapshot(stateRef,snap=>{
   if(snap.exists()){
     const d=snap.data();
-    STUDENTS.forEach(s=>{ if(d[s.cf]!==undefined) state[s.cf]=d[s.cf]; });
+    STUDENTS.forEach(s=>{if(d[s.cf]!==undefined)state[s.cf]=d[s.cf];});
   }
-  setSyncStatus(true);
-  renderAll();
-}, err=>{ console.error('stateRef error:',err); setSyncStatus(false); });
+  sync(true);
+  // Refresh individual cards (no full rebuild = no flicker on remote changes)
+  const list=document.getElementById('studentList');
+  if(list.children.length>0){
+    STUDENTS.forEach(s=>refreshCard(s.cf));
+    updateStats(); applyFilters();
+  } else {
+    rebuildList();
+  }
+},()=>sync(false));
 
-onSnapshot(phoneRef, snap=>{
-  // IMPORTANT: handle both exists and not-exists cases
-  // On first load the doc may not exist yet — that is fine, phones stay empty
-  // When doc is created (first savePhone), this fires again with the data
-  const d = snap.exists() ? snap.data() : {};
-  STUDENTS.forEach(s=>{ phones[s.cf] = d[s.cf] || ''; });
-  renderAll();
-}, err=>{ console.error('phoneRef error:',err); });
+onSnapshot(phoneRef,snap=>{
+  const d=snap.exists()?snap.data():{};
+  STUDENTS.forEach(s=>{phones[s.cf]=d[s.cf]||'';});
+  // Always rebuildList so phones appear even on first load (race condition fix)
+  rebuildList();
+},()=>{});
 
-renderAll();
+rebuildList();
+document.getElementById('roomView').style.display='none';
 </script>
 </body>
 </html>
