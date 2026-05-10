@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FSL Danimarca - Copenaghen v24</title>
+<title>FSL Danimarca - Copenaghen v26</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -179,7 +179,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v24</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v26</div>
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
@@ -288,8 +288,20 @@
     <label>Messaggio</label>
     <textarea id="waText" style="width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:11px 14px;border-radius:10px;outline:none;resize:vertical;min-height:80px;margin-bottom:10px;line-height:1.5;" placeholder="Scrivi il messaggio…" oninput="updateWAInfo()"></textarea>
     <div class="wa-info" id="waInfo"></div>
-    <button class="btn-wa-send" onclick="sendWA()">💬 Apri WhatsApp</button>
-    <button class="btn-cancel" style="width:100%;" onclick="closeWAModal()">Annulla</button>
+    <button class="btn-wa-send" onclick="sendWABusiness()" id="waSendBtn">💬 Invia con WA Business</button>
+    <div id="waProgress" style="display:none;margin-bottom:8px;">
+      <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:6px;">Tocca ogni destinatario per aprire WA Business:</div>
+      <div id="waLinkList" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:8px;padding:6px 8px;background:var(--card);border-radius:6px;">
+        💡 WA Business apre ogni chat già con il messaggio pronto — premi solo Invia.
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;margin-top:4px;">
+      <button class="btn-wa-send" style="flex:1;background:#0057b7;font-size:.72rem;" onclick="copyWANumbers()">📋 Copia numeri</button>
+      <button class="btn-wa-send" style="flex:1;background:#374151;font-size:.72rem;" onclick="copyWAMsg()">📋 Copia messaggio</button>
+    </div>
+    <div id="waFeedback" style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--present);text-align:center;min-height:16px;margin-bottom:8px;"></div>
+    <button class="btn-cancel" style="width:100%;" onclick="closeWAModal()">Chiudi</button>
   </div>
 </div>
 
@@ -753,6 +765,9 @@ async function saveRooms(){
 window.openWAModal=function(){
   waTarget='all';
   document.getElementById('waText').value='';
+  document.getElementById('waProgress').style.display='none';
+  const btn=document.getElementById('waSendBtn');if(btn)btn.style.display='block';
+  document.getElementById('waLinkList').innerHTML='';
   document.querySelectorAll('.wa-tab').forEach(t=>t.classList.remove('active'));
   document.querySelector('.wa-tab').classList.add('active');
   document.getElementById('waRoomSel').style.display='none';
@@ -800,29 +815,89 @@ function getWARecipients(){
   return [];
 }
 
-window.sendWA=function(){
+function waFeedback(msg){
+  const el=document.getElementById('waFeedback');
+  if(el){el.textContent=msg;setTimeout(()=>{if(el)el.textContent='';},2500);}
+}
+
+function getWAList(){
+  return getWARecipients().filter(s=>phones[s.cf]&&normalizePhone(phones[s.cf]));
+}
+
+window.sendWABusiness=function(){
   const msg=document.getElementById('waText').value.trim();
-  const r=getWARecipients().filter(s=>phones[s.cf]&&normalizePhone(phones[s.cf]));
+  const r=getWAList();
   if(!r.length){alert('Nessun destinatario con numero.');return;}
   if(!msg){alert('Scrivi un messaggio.');return;}
   const enc=encodeURIComponent(msg);
-  // Replace send button with tap-to-open list (window.open multiple = blocked by browsers)
-  document.getElementById('waInfo').innerHTML=
-    '<strong style="color:var(--text)">Tocca ogni nome per aprire WhatsApp:</strong>';
-  const sendBtn=document.querySelector('.btn-wa-send');
-  const wrap=document.createElement('div');
-  wrap.style.cssText='display:flex;flex-direction:column;gap:7px;margin-bottom:12px;max-height:260px;overflow-y:auto;';
-  r.forEach(s=>{
+
+  // Hide send button, show link list
+  document.getElementById('waSendBtn').style.display='none';
+  const prog=document.getElementById('waProgress');
+  prog.style.display='block';
+  const linkList=document.getElementById('waLinkList');
+  linkList.innerHTML='';
+
+  r.forEach((s,i)=>{
     const num=normalizePhone(phones[s.cf]).replace('+','');
     const a=document.createElement('a');
-    a.href='https://wa.me/'+num+'?text='+enc;
-    a.target='_blank'; a.rel='noopener';
-    a.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:#25d366;padding:10px 14px;border-radius:10px;text-decoration:none;font-family:var(--sans,sans-serif);font-size:.85rem;font-weight:600;';
-    a.innerHTML='<span style="font-size:1.1rem">💬</span> '+s.cognome+' '+s.nome+' <span style="font-family:monospace;font-size:.65rem;color:var(--muted);margin-left:auto;">+'+num+'</span>';
-    wrap.appendChild(a);
+    // whatsapp://send works with WA Business installed
+    // Fallback to wa.me for desktop
+    a.href='whatsapp://send?phone='+num+'&text='+enc;
+    // On desktop fallback
+    a.addEventListener('click',function(e){
+      // Try whatsapp:// first, if not available fall back to wa.me
+      setTimeout(()=>{
+        if(document.hidden===false){
+          window.open('https://wa.me/'+num+'?text='+enc,'_blank');
+        }
+      },500);
+    });
+    a.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(37,211,102,.12);border:1.5px solid rgba(37,211,102,.3);color:#25d366;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.85rem;transition:all .15s;';
+    a.innerHTML=`<span style="font-size:1.2rem">💬</span>`
+      +`<span style="flex:1;">${s.cognome} ${s.nome} <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);">${s.classe}</span></span>`
+      +`<span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);">+${num}</span>`
+      +`<span style="font-size:.75rem;margin-left:4px;">›</span>`;
+    // Mark as sent on click
+    a.addEventListener('click',function(){
+      this.style.background='rgba(37,211,102,.25)';
+      this.style.borderColor='rgba(37,211,102,.6)';
+      this.insertAdjacentHTML('afterbegin','<span style="font-size:.8rem;margin-right:4px;">✓ </span>');
+    });
+    linkList.appendChild(a);
   });
-  sendBtn.replaceWith(wrap);
 };
+
+window.copyWANumbers=function(){
+  const r=getWAList();
+  if(!r.length){alert('Nessun destinatario con numero.');return;}
+  const nums=r.map(s=>normalizePhone(phones[s.cf])).join('\n');
+  navigator.clipboard.writeText(nums)
+    .then(()=>waFeedback('✓ '+r.length+' numeri copiati!'))
+    .catch(()=>{
+      const ta=document.createElement('textarea');
+      ta.value=nums;document.body.appendChild(ta);ta.select();
+      document.execCommand('copy');document.body.removeChild(ta);
+      waFeedback('✓ Numeri copiati!');
+    });
+};
+
+window.copyWAMsg=function(){
+  const msg=document.getElementById('waText').value.trim();
+  if(!msg){alert('Scrivi un messaggio.');return;}
+  navigator.clipboard.writeText(msg)
+    .then(()=>waFeedback('✓ Messaggio copiato!'))
+    .catch(()=>{
+      const ta=document.createElement('textarea');
+      ta.value=msg;document.body.appendChild(ta);ta.select();
+      document.execCommand('copy');document.body.removeChild(ta);
+      waFeedback('✓ Messaggio copiato!');
+    });
+};
+
+// Keep sendWA as alias
+window.sendWA=window.sendWABusiness;
+
 
 // ── ROOMS LISTENER ────────────────────────────────────────────────
 onSnapshot(roomsRef,snap=>{
