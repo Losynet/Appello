@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FSL Danimarca - Copenaghen v23</title>
+<title>FSL Danimarca - Copenaghen v24</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -179,7 +179,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
     <div class="date-badge">8 — 14 MAGGIO 2026</div>
-    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v23</div>
+    <div style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:1px;">v24</div>
     <span id="syncDot" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;">● Connessione in corso…</span>
   </div>
 </div>
@@ -640,8 +640,8 @@ function getRoomBadge(cf){
 function cardHTML(s){
   const st=state[s.cf]||'pending';
   const norm=normalizePhone(phones[s.cf]||'');
-  const callBtn=norm&&canCall
-    ?`<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()" title="Chiama">📞</a>`
+  const callBtn=norm
+    ?`<a class="btn-call" href="tel:${norm}" onclick="event.stopPropagation()" title="Chiama ${s.cognome}">📞</a>`
     :'<span style="width:34px;flex-shrink:0"></span>';
   const waBtn=norm
     ?`<a class="btn-wa" href="https://wa.me/${norm.replace('+','')}" target="_blank" onclick="event.stopPropagation()" title="WhatsApp">💬</a>`
@@ -805,9 +805,23 @@ window.sendWA=function(){
   const r=getWARecipients().filter(s=>phones[s.cf]&&normalizePhone(phones[s.cf]));
   if(!r.length){alert('Nessun destinatario con numero.');return;}
   if(!msg){alert('Scrivi un messaggio.');return;}
-  window.closeWAModal();
   const enc=encodeURIComponent(msg);
-  r.forEach((s,i)=>setTimeout(()=>window.open(`https://wa.me/${normalizePhone(phones[s.cf]).replace('+','')}?text=${enc}`,'_blank'),i*800));
+  // Replace send button with tap-to-open list (window.open multiple = blocked by browsers)
+  document.getElementById('waInfo').innerHTML=
+    '<strong style="color:var(--text)">Tocca ogni nome per aprire WhatsApp:</strong>';
+  const sendBtn=document.querySelector('.btn-wa-send');
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;flex-direction:column;gap:7px;margin-bottom:12px;max-height:260px;overflow-y:auto;';
+  r.forEach(s=>{
+    const num=normalizePhone(phones[s.cf]).replace('+','');
+    const a=document.createElement('a');
+    a.href='https://wa.me/'+num+'?text='+enc;
+    a.target='_blank'; a.rel='noopener';
+    a.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:#25d366;padding:10px 14px;border-radius:10px;text-decoration:none;font-family:var(--sans,sans-serif);font-size:.85rem;font-weight:600;';
+    a.innerHTML='<span style="font-size:1.1rem">💬</span> '+s.cognome+' '+s.nome+' <span style="font-family:monospace;font-size:.65rem;color:var(--muted);margin-left:auto;">+'+num+'</span>';
+    wrap.appendChild(a);
+  });
+  sendBtn.replaceWith(wrap);
 };
 
 // ── ROOMS LISTENER ────────────────────────────────────────────────
